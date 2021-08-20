@@ -1,0 +1,9 @@
+---
+pulpcore_api::manage_agent_gems: true
+pulpcore_api::agent_gems:
+  - pulpcore_client
+  - pulp_container_client
+  - pulp_deb_client
+  - pulp_file_client
+  - pulp_rpm_client
+...
