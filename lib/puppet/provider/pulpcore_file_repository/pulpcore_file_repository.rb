@@ -1,71 +1,80 @@
 require 'puppet/resource_api/simple_provider'
-require 'pulpcore_client'
+require 'puppet'
+require 'pulp_file_client'
+require 'yaml'
 
 class ::Puppet::Provider::PulpcoreFileRepository::PulpcoreFileRepository < Puppet::ResourceApi::SimpleProvider
-  #def initialize
-  #  # Setup authorization
-  #  PulpcoreClient.configure do |config|
-  #    # Configure HTTP basic authorization: basicAuth
-  #    config.username = 'admin'
-  #    config.password = 'secret'
-  #  end
-  #end
+
+  def initialize
+    apiconfig = YAML.load_file(File.join(Puppet.settings[:confdir], '/pulpcoreapi.yaml'))
+    PulpFileClient.configure do |config|
+      config.scheme     = apiconfig['scheme']
+      config.host       = apiconfig['host']
+      config.ssl_verify = apiconfig['ssl_verify']
+      config.username   = apiconfig['username']
+      config.password   = apiconfig['password']
+    end
+
+    @api_instance = PulpFileClient::RepositoriesFileApi.new
+    @instances = []
+  end
+
+  def hash_to_object(should)
+    PulpFileClient::FileFileRepository.new(
+      should.tap { |value| value.delete(:ensure) }
+    )
+  end
 
   def get(context)
-    context.info("Called get")
+    if @instances.empty?
+      parsed_objects = []
+      begin
+        @api_instance.list.to_hash[:results].each do |object|
+          object[:ensure] = 'present'
+          parsed_objects << object
+        end
+      rescue PulpFileClient::ApiError => e
+        context.err("Exception when calling FileFileClient->list: #{e}")
+      end
+      @instances = parsed_objects
+    end
+    @instances
   end
 
-  # Needed function for simple provider
-  # context: provides utilities from the runtime environment
-  # name: the name of the new resource
-  # should: a hash of the attributes for the new resource
   def create(context, name, should)
-    context.info("Called create")
-    #api_instance = PulpFileClient::RepositoriesFileApi.new
-    #file_file_repository = PulpFileClient::FileFileRepository.new
-
-    #begin
-    #  result = api_instance.create(file_file_repository)
-    #  context.info("Created #{result}")
-    #rescue PulpFileClient::ApiError => e
-    #  context.error("Exception when calling RepositoriesFileApi->create: #{e}")
-    #end
+    begin
+      @api_instance.create(hash_to_object(should))
+    rescue PulpFileClient::ApiError => e
+      context.err("Exception when calling FileFileClient->create[#{name}]: #{e}")
+    end
   end
 
-  # Needed function for simple provideFileRepository
-  # context: provides utilities from the runtime environment
-  # name: the name of the new resource
-  # should: a hash of the attributes for the new resource
   def update(context, name, should)
-    context.info("Called update")
+    begin
+      @api_instance.update(get_pulp_href(name),hash_to_object(should))
+    rescue PulpFileClient::ApiError => e
+      context.err("Exception when calling FileFileClient->update[#{name}]: #{e}")
+    end
   end
 
-  # Needed function for simple provider
-  # context: provides utilities from the runtime environment
-  # name: the name of the new resource
   def delete(context, name)
-    context.info("Called delete")
+    begin
+      @api_instance.delete(get_pulp_href(name))
+    rescue PulpFileClient::ApiError => e
+      context.err("Exception when calling FileFileClient->delete[#{name}]: #{e}")
+    end
+  end
+
+  def get_pulp_href(name)
+    begin
+      response = @api_instance.list({limit: 1, name: name}).to_hash
+      if response[:count] != 1
+        context.err("Found not exactly 1 repository with #{name}, found #{response[:count]}.")
+      end
+      pulp_href = response[:results][0][:pulp_href]
+    rescue PulpFileClient::ApiError => e
+      context.err("Exception when calling FileFileClient->list[#{name}]: #{e}")
+    end
+    pulp_href
   end
 end
-#api_instance = PulpcoreClient::AccessPoliciesApi.new
-#opts = {
-#  customized: true, # Boolean |
-#  limit: 56, # Integer | Number of results to return per page.
-#  offset: 56, # Integer | The initial index from which to return the results.
-#  ordering: 'ordering_example', # String | Which field to use when ordering the results.
-#  viewset_name: 'viewset_name_example', # String | Filter results where viewset_name matches value
-#  viewset_name__contains: 'viewset_name__contains_example', # String | Filter results where viewset_name contains value
-#  viewset_name__icontains: 'viewset_name__icontains_example', # String | Filter results where viewset_name contains value
-#  viewset_name__in: ['viewset_name__in_example'], # Array<String> | Filter results where viewset_name is in a comma-separated list of values
-#  viewset_name__startswith: 'viewset_name__startswith_example', # String | Filter results where viewset_name starts with value
-#  fields: 'fields_example', # String | A list of fields to include in the response.
-#  exclude_fields: 'exclude_fields_example' # String | A list of fields to exclude from the response.
-#}
-#
-#begin
-#  #List access policys
-#  result = api_instance.list(opts)
-#  p result
-#rescue PulpcoreClient::ApiError => e
-#  puts "Exception when calling AccessPoliciesApi->list: #{e}"
-#end

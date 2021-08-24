@@ -19,6 +19,11 @@ EOS
       desc:      'Adding docs for suppressing warnings',
       behaviour: :namevar,
     },
+    pulp_labels: {
+      type:      'Optional[Hash]',
+      desc:      'Adding docs for suppressing warnings',
+      default: {},
+    },
     description: {
       type: 'Optional[String]',
       desc: 'Adding docs for suppressing warnings',
@@ -40,15 +45,20 @@ EOS
     manifest: {
       type:    'String',
       desc:    'Adding docs for suppressing warnings',
-      default: 'PULP_MANFEST',
+      default: 'PULP_MANIFEST',
     },
     pulp_href: {
       type:      'String',
       desc:      'Pulp href',
       behaviour: :read_only,
     },
-    pulp_created: {
+    latest_version_href: {
       type:      'String',
+      desc:      'Pulp href',
+      behaviour: :read_only,
+    },
+    pulp_created: {
+      type:      'Runtime',
       desc:      'Timestamp of creation.',
       behaviour: :read_only,
     },
