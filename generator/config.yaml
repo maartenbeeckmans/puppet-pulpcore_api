@@ -1,0 +1,97 @@
+---
+# Config used by generator
+resources:
+# Container plugin
+  - schema: container.ContainerDistributionResponse
+    name: pulpcore_container_container_distribution
+    namevar: name
+    client_binding: pulp_container_client
+    client_binding_api: DistributionsContainerApi
+    client_binding_model: ContainerContainerDistribution
+  - schema: container.ContainerRemoteResponse
+    name: pulpcore_container_container_remote
+    namevar: name
+    client_binding: pulp_container_client
+    client_binding_api: RemotesContainerApi
+    client_binding_model: ContainerContainerRemote
+  - schema: container.ContainerRepositoryResponse
+    name: pulpcore_container_container_repository
+    namevar: name
+    client_binding: pulp_container_client
+    client_binding_api: RepositoriesContainerApi
+    client_binding_model: ContainerContainerRepository
+# Deb plugin
+  - schema: deb.AptDistributionResponse
+    name: pulpcore_deb_apt_distribution
+    namevar: name
+    client_binding: pulp_deb_client
+    client_binding_api: DistributionsAptApi
+    client_binding_model: DebAptDistribution
+  - schema: deb.AptRemoteResponse
+    name: pulpcore_deb_apt_remote
+    namevar: name
+    client_binding: pulp_deb_client
+    client_binding_api: RemotesAptApi
+    client_binding_model: DebAptRemote
+  - schema: deb.AptRepositoryResponse
+    name: pulpcore_deb_apt_repository
+    namevar: name
+    client_binding: pulp_deb_client
+    client_binding_api: RepositoriesAptApi
+    client_binding_model: DebAptRepository
+  - schema: deb.AptPublicationResponse
+    name: pulpcore_deb_apt_publication
+    namevar: repository_version
+    client_binding: pulp_deb_client
+    client_binding_api: PublicationsAptApi
+    client_binding_model: DebAptPublication
+# File plugin
+  - schema: file.FileDistributionResponse
+    name: pulpcore_file_file_distribution
+    namevar: name
+    client_binding: pulp_file_client
+    client_binding_api: DistributionsFileApi
+    client_binding_model: FileFileDistribution
+  - schema: file.FileRemoteResponse
+    name: pulpcore_file_file_remote
+    namevar: name
+    client_binding: pulp_file_client
+    client_binding_api: RemotesFileApi
+    client_binding_model: FileFileRemote
+  - schema: file.FileRepositoryResponse
+    name: pulpcore_file_file_repository
+    namevar: name
+    client_binding: pulp_file_client
+    client_binding_api: RepositoriesFileApi
+    client_binding_model: FileFileRepository
+  - schema: file.FilePublicationResponse
+    name: pulpcore_file_file_publication
+    namevar: repository_version
+    client_binding: pulp_file_client
+    client_binding_api: PublicationsFileApi
+    client_binding_model: FileFilePublication
+# Rpm plugin
+  - schema: rpm.RpmDistributionResponse
+    name: pulpcore_rpm_rpm_distribution
+    namevar: name
+    client_binding: pulp_rpm_client
+    client_binding_api: DistributionsRpmApi
+    client_binding_model: FileFileDistribution
+  - schema: rpm.RpmRemoteResponse
+    name: pulpcore_rpm_rpm_remote
+    namevar: name
+    client_binding: pulp_rpm_client
+    client_binding_api: RepositoriesRpmApi
+    client_binding_model: FileFileRemote
+  - schema: rpm.RpmRepositoryResponse
+    name: pulpcore_rpm_rpm_repository
+    namevar: name
+    client_binding: pulp_rpm_client
+    client_binding_api: RepositoriesRpmApi
+    client_binding_model: FileFileRepository
+  - schema: rpm.RpmPublicationResponse
+    name: pulpcore_rpm_rpm_publication
+    namevar: repository_version
+    client_binding: pulp_rpm_client
+    client_binding_api: PublicationsRpmApi
+    client_binding_model: FileFilePublication

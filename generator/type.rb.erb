@@ -1,0 +1,39 @@
+# 
+# This type is automatically generated
+#
+# frozen_string_literal: true
+
+require 'puppet/resource_api'
+
+Puppet::ResourceApi.register_type(
+  name: '<%= config_hash['name'] %>',
+  docs: <<-EOS,
+@summary <%= config_hash['description'] %>
+
+This type provides Puppet with the capabilities to manage a pulp <%= @name %>
+EOS
+  features: [],
+  attributes: {
+    ensure: {
+      type:    'Enum[present, absent]',
+      desc:    'Whether this resource should be present or absent on the target system.',
+      default: 'present',
+    },
+    <% config_hash['attributes'].each { |attribute| %>
+    <%= attribute['name'] -%>: {
+      type:      '<%= attribute['type'] %>',
+      desc:      '<%= attribute['description'] %>',
+      <%- if not attribute['default'].nil? -%>
+        <%- if attribute['type'] == 'Boolean' or attribute['type'] == 'Integer' -%>
+      default: <%= attribute['default'] %>,
+        <%- else -%>
+      default:   '<%= attribute['default'] %>',
+        <%- end -%>
+      <%- end -%>
+      <%- if attribute['behaviour'] -%>
+      behaviour: <%= attribute['behaviour'] %>,
+      <%- end -%>
+    },
+    <% } %>
+  },
+)
