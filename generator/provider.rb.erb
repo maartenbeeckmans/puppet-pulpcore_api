@@ -15,7 +15,7 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
       config.password   = apiconfig['password']
     end
 
-    @api_instance = <%= config_hash['client_binding'] -%>.<%= config_hash['client_binding_api'] -%>.new
+    @api_instance = <%= config_hash['client_binding'] -%>::<%= config_hash['client_binding_api'] -%>.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
   end
 
   def hash_to_object(hash)
-    <%= config_hash['client_binding'] -%>.<%= config_hash['client_binding_model'] -%>.new(
+    <%= config_hash['client_binding'] -%>::<%= config_hash['client_binding_model'] -%>.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

@@ -15,7 +15,7 @@ class ::Puppet::Provider::PulpcoreDebAptRemote::PulpcoreDebAptRemote < Puppet::R
       config.password   = apiconfig['password']
     end
 
-    @api_instance = PulpDebClient.RemotesAptApi.new
+    @api_instance = PulpDebClient::RemotesAptApi.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreDebAptRemote::PulpcoreDebAptRemote < Puppet::R
   end
 
   def hash_to_object(hash)
-    PulpDebClient.DebAptRemote.new(
+    PulpDebClient::DebAptRemote.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

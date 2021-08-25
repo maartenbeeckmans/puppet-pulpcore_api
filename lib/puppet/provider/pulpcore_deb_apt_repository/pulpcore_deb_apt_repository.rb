@@ -15,7 +15,7 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
       config.password   = apiconfig['password']
     end
 
-    @api_instance = PulpDebClient.RepositoriesAptApi.new
+    @api_instance = PulpDebClient::RepositoriesAptApi.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
   end
 
   def hash_to_object(hash)
-    PulpDebClient.DebAptRepository.new(
+    PulpDebClient::DebAptRepository.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

@@ -15,7 +15,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
       config.password   = apiconfig['password']
     end
 
-    @api_instance = PulpContainerClient.RemotesContainerApi.new
+    @api_instance = PulpContainerClient::RemotesContainerApi.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
   end
 
   def hash_to_object(hash)
-    PulpContainerClient.ContainerContainerRemote.new(
+    PulpContainerClient::ContainerContainerRemote.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

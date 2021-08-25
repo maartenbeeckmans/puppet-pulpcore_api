@@ -15,7 +15,7 @@ class ::Puppet::Provider::PulpcoreFileFilePublication::PulpcoreFileFilePublicati
       config.password   = apiconfig['password']
     end
 
-    @api_instance = PulpFileClient.PublicationsFileApi.new
+    @api_instance = PulpFileClient::PublicationsFileApi.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreFileFilePublication::PulpcoreFileFilePublicati
   end
 
   def hash_to_object(hash)
-    PulpFileClient.FileFilePublication.new(
+    PulpFileClient::FileFilePublication.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end
