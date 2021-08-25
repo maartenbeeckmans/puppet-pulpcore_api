@@ -29,7 +29,7 @@ EOS
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
-      default:   '{}',
+      default:   {},
     },
     
     description: {
@@ -50,7 +50,7 @@ EOS
     autopublish: {
       type:      'Boolean',
       desc:      'Whether to automatically create publications for new repository versions, and update any distributions pointing to this repository.',
-      default: false,
+      default:   false,
     },
     
     manifest: {

@@ -46,19 +46,19 @@ EOS
     gpgcheck: {
       type:      'Integer',
       desc:      'An option specifying whether a client should perform a GPG signature check on packages.',
-      default: 0,
+      default:   0,
     },
     
     repo_gpgcheck: {
       type:      'Integer',
       desc:      'An option specifying whether a client should perform a GPG signature check on the repodata.',
-      default: 0,
+      default:   0,
     },
     
     sqlite_metadata: {
       type:      'Boolean',
       desc:      'An option specifying whether Pulp should generate SQLite metadata.',
-      default: false,
+      default:   false,
     },
     
     pulp_href: {

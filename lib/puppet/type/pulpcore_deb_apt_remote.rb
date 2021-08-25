@@ -44,7 +44,7 @@ EOS
     tls_validation: {
       type:      'Boolean',
       desc:      'If True, TLS peer validation must be performed.',
-      default: false,
+      default:   false,
     },
     
     proxy_url: {
@@ -55,7 +55,7 @@ EOS
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
-      default:   '{}',
+      default:   {},
     },
     
     download_concurrency: {
@@ -122,19 +122,19 @@ EOS
     sync_sources: {
       type:      'Boolean',
       desc:      'Sync source packages',
-      default: false,
+      default:   false,
     },
     
     sync_udebs: {
       type:      'Boolean',
       desc:      'Sync installer packages',
-      default: false,
+      default:   false,
     },
     
     sync_installer: {
       type:      'Boolean',
       desc:      'Sync installer files',
-      default: false,
+      default:   false,
     },
     
     gpgkey: {
@@ -145,7 +145,7 @@ EOS
     ignore_missing_package_indices: {
       type:      'Boolean',
       desc:      'By default, upstream repositories that declare architectures and corresponding package indices in their Release files without actually publishing them, will fail to synchronize. Set this flag to True to allow the synchronization of such "partial mirrors" instead. Alternatively, you could make your remote filter by architectures for which the upstream repository does have indices.',
-      default: false,
+      default:   false,
     },
     
     pulp_href: {

@@ -34,7 +34,7 @@ EOS
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
-      default:   '{}',
+      default:   {},
     },
     
     base_path: {
@@ -55,7 +55,7 @@ EOS
     private: {
       type:      'Boolean',
       desc:      'Restrict pull access to explicitly authorized users. Defaults to unrestricted pull access.',
-      default: false,
+      default:   false,
     },
     
     description: {

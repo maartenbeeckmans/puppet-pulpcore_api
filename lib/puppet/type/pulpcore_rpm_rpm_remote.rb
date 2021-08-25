@@ -44,7 +44,7 @@ EOS
     tls_validation: {
       type:      'Boolean',
       desc:      'If True, TLS peer validation must be performed.',
-      default: false,
+      default:   false,
     },
     
     proxy_url: {
@@ -55,7 +55,7 @@ EOS
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
-      default:   '{}',
+      default:   {},
     },
     
     download_concurrency: {

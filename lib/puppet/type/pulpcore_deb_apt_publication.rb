@@ -34,13 +34,13 @@ EOS
     simple: {
       type:      'Boolean',
       desc:      'Activate simple publishing mode (all packages in one release component).',
-      default: false,
+      default:   false,
     },
     
     structured: {
       type:      'Boolean',
       desc:      'Activate structured publishing mode.',
-      default: false,
+      default:   false,
     },
     
     signing_service: {

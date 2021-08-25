@@ -39,7 +39,7 @@ EOS
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
-      default:   '{}',
+      default:   {},
     },
     
     repository: {
