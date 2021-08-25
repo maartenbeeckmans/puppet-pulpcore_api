@@ -11,4 +11,8 @@ class pulpcore_api (
       provider => 'puppet_gem',
     }
   }
+
+  pulpcore_file_repository { 'test':
+    retained_versions => 1,
+  }
 }
