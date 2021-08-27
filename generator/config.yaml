@@ -76,22 +76,22 @@ resources:
     namevar: name
     client_binding: pulp_rpm_client
     client_binding_api: DistributionsRpmApi
-    client_binding_model: FileFileDistribution
+    client_binding_model: RpmRpmDistribution
   - schema: rpm.RpmRemoteResponse
     name: pulpcore_rpm_rpm_remote
     namevar: name
     client_binding: pulp_rpm_client
-    client_binding_api: RepositoriesRpmApi
-    client_binding_model: FileFileRemote
+    client_binding_api: RemotesRpmApi
+    client_binding_model: RpmRpmRemote
   - schema: rpm.RpmRepositoryResponse
     name: pulpcore_rpm_rpm_repository
     namevar: name
     client_binding: pulp_rpm_client
     client_binding_api: RepositoriesRpmApi
-    client_binding_model: FileFileRepository
+    client_binding_model: RpmRpmRepository
   - schema: rpm.RpmPublicationResponse
     name: pulpcore_rpm_rpm_publication
     namevar: repository_version
     client_binding: pulp_rpm_client
     client_binding_api: PublicationsRpmApi
-    client_binding_model: FileFilePublication
+    client_binding_model: RpmRpmPublication

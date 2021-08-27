@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmDistribution::PulpcoreRpmRpmDistribution
   end
 
   def hash_to_object(hash)
-    PulpRpmClient::FileFileDistribution.new(
+    PulpRpmClient::RpmRpmDistribution.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

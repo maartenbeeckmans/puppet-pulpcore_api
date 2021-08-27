@@ -97,6 +97,7 @@ EOS
     headers: {
       type:      'Array',
       desc:      'Headers for aiohttp.Clientsession',
+      default:   [],
     },
     
     rate_limit: {
@@ -112,11 +113,13 @@ EOS
     include_tags: {
       type:      'Optional[Array]',
       desc:      ' A list of tags to include during sync. Wildcards *, ? are recognized. `include_tags` is evaluated before `exclude_tags`. ',
+      default:   '[]',
     },
     
     exclude_tags: {
       type:      'Optional[Array]',
       desc:      ' A list of tags to exclude during sync. Wildcards *, ? are recognized. `exclude_tags` is evaluated after `include_tags`. ',
+      default:   '[]',
     },
     
     pulp_href: {

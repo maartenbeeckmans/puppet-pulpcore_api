@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmPublication::PulpcoreRpmRpmPublication <
   end
 
   def hash_to_object(hash)
-    PulpRpmClient::FileFilePublication.new(
+    PulpRpmClient::RpmRpmPublication.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

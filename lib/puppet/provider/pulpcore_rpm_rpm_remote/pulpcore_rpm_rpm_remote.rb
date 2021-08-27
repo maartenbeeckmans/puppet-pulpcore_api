@@ -15,7 +15,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmRemote::PulpcoreRpmRpmRemote < Puppet::R
       config.password   = apiconfig['password']
     end
 
-    @api_instance = PulpRpmClient::RepositoriesRpmApi.new
+    @api_instance = PulpRpmClient::RemotesRpmApi.new
     @instances = []
   end
 
@@ -74,7 +74,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmRemote::PulpcoreRpmRpmRemote < Puppet::R
   end
 
   def hash_to_object(hash)
-    PulpRpmClient::FileFileRemote.new(
+    PulpRpmClient::RpmRpmRemote.new(
       hash.tap { |value| value.delete(:ensure) }
     )
   end

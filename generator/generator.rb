@@ -8,7 +8,7 @@ require 'fileutils'
 
 module Config
   class << self
-    attr_reader :apidocbasepath, :typemap, :resourcemap, :typetemplate, :providertemplate
+    attr_reader :apidocbasepath, :typemap, :generator_config, :typetemplate, :providertemplate
   end
 
   # Path to the api file
@@ -26,7 +26,7 @@ module Config
   }
 
   # Configuration file
-  @resourcemap = YAML.load_file("config.yaml")
+  @generator_config = YAML.load_file("config.yaml")
   @typetemplate = ERB.new(File.read('type.rb.erb'), nil, '-')
   @providertemplate = ERB.new(File.read('provider.rb.erb'), nil, '-')
 end
@@ -48,7 +48,7 @@ class Endpoint
   end
 
   def _generate(api_config_hash)
-    Config.resourcemap['resources'].each do |resource|
+    Config.generator_config['resources'].each do |resource|
       puts '----------------------------------------'.blue
       puts "Generating resource #{resource['name']}".blue
       config_hash = _create_config_hash(resource, api_config_hash)
@@ -103,6 +103,9 @@ class Endpoint
         end
         if attribute[1]['type'] == 'object'
           attributemap['default'] = {}
+        end
+        if attribute[1]['type'] == 'array'
+          attributemap['default'] = []
         end
       end
       if not attribute[1]['description'].nil?

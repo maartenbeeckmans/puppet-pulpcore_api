@@ -97,6 +97,7 @@ EOS
     headers: {
       type:      'Array',
       desc:      'Headers for aiohttp.Clientsession',
+      default:   [],
     },
     
     rate_limit: {

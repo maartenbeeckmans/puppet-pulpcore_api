@@ -52,6 +52,7 @@ EOS
     distributions: {
       type:      'Array',
       desc:      'This publication is currently hosted as defined by these distributions.',
+      default:   [],
       behaviour: :read_only,
     },
     

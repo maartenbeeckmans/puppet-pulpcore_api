@@ -6,4 +6,5 @@ pulpcore_api::agent_gems:
   - pulp_deb_client
   - pulp_file_client
   - pulp_rpm_client
+pulpcore_api::resources: {}
 ...
