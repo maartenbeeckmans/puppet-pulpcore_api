@@ -61,6 +61,7 @@ EOS
     retain_package_versions: {
       type:      'Integer',
       desc:      'The number of versions of each package to keep in the repository; older versions will be purged. The default is `0`, which will disable this feature and keep all versions of each package.',
+      default:   0,
     },
     
     metadata_checksum_type: {

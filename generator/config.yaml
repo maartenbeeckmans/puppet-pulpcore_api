@@ -2,6 +2,12 @@
 # Config used by generator
 resources:
 # Container plugin
+  - schema: container.ContentRedirectContentGuardResponse
+    name: pulpcore_contentguards_container_content_redirect
+    namevar: name
+    client_binding: pulp_container_client
+    client_binding_api: ContentguardsContentRedirectApi
+    client_binding_model: ContainerContentRedirectContentGuard
   - schema: container.ContainerDistributionResponse
     name: pulpcore_container_container_distribution
     namevar: name

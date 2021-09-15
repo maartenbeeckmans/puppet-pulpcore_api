@@ -8,7 +8,7 @@ require 'fileutils'
 
 module Config
   class << self
-    attr_reader :apidocbasepath, :typemap, :generator_config, :typetemplate, :providertemplate
+    attr_reader :apidocbasepath, :typemap, :generator_config, :typetemplate, :providertemplate, :gethreffunctiontemplate
   end
 
   # Path to the api file
@@ -29,6 +29,8 @@ module Config
   @generator_config = YAML.load_file("config.yaml")
   @typetemplate = ERB.new(File.read('type.rb.erb'), nil, '-')
   @providertemplate = ERB.new(File.read('provider.rb.erb'), nil, '-')
+  @hreffunctiontemplate = ERB.new(File.read('get_pulp_href_function.rb.erb'), nil, '-')
+  @gethreffunctiontemplate = ERB.new(File.read('get_pulp_href_function.rb.erb'), nil, '-')
 end
 
 class Endpoint
@@ -55,6 +57,7 @@ class Endpoint
       _print_hash(config_hash)
       _gentype(config_hash)
       _genprovider(config_hash)
+      _gengethreffunction(config_hash)
       puts '----------------------------------------'.blue
     end
   end
@@ -100,6 +103,9 @@ class Endpoint
         end
         if attribute[1]['type'] == 'boolean'
           attributemap['default'] = false
+        end
+        if attribute[1]['type'] == 'integer' and attribute[1]['nullable'].nil?
+          attributemap['default'] = 0
         end
         if attribute[1]['type'] == 'object'
           attributemap['default'] = {}
@@ -147,6 +153,13 @@ class Endpoint
     FileUtils.mkdir_p "../lib/puppet/provider/#{config_hash['name']}"
     File.open("../lib/puppet/provider/#{config_hash['name']}/#{config_hash['name']}.rb", 'w') do |f|
       f.write Config.providertemplate.result(binding)
+    end
+  end
+
+  def _gengethreffunction(config_hash)
+    puts "Generating get_pulp_href_function ../lib/puppet/functions/pulpcore/#{config_hash['name']}.rb".green
+    File.open("../lib/puppet/functions/pulpcore/get_pulp_href_#{config_hash['name']}.rb", 'w') do |f|
+      f.write Config.gethreffunctiontemplate.result(binding)
     end
   end
 end

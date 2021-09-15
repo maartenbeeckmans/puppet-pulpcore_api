@@ -7,4 +7,28 @@ pulpcore_api::agent_gems:
   - pulp_file_client
   - pulp_rpm_client
 pulpcore_api::resources: {}
+pulpcore_api::container_container_mirrors: {}
+pulpcore_api::container_container_mirror_defaults: {}
+pulpcore_api::file_file_mirrors: {}
+pulpcore_api::deb_apt_mirrors: {}
+pulpcore_api::deb_apt_mirror_defaults: {}
+pulpcore_api::file_file_mirrors: {}
+pulpcore_api::file_file_mirror_defaults: {}
+pulpcore_api::rpm_rpm_mirrors: {}
+pulpcore_api::rpm_rpm_mirror_defaults: {}
+pulpcore_api::rpm_rpm_trees: {}
+pulpcore_api::rpm_rpm_tree_defaults: {}
+pulpcore_api::purge_resources:
+  - pulpcore_container_container_distribution
+  - pulpcore_container_container_remote
+  - pulpcore_container_container_repository
+  - pulpcore_deb_apt_distribution
+  - pulpcore_deb_apt_remote
+  - pulpcore_deb_apt_repository
+  - pulpcore_file_file_distribution
+  - pulpcore_file_file_remote
+  - pulpcore_file_file_repository
+  - pulpcore_rpm_rpm_distribution
+  - pulpcore_rpm_rpm_remote
+  - pulpcore_rpm_rpm_repository
 ...

@@ -24,7 +24,7 @@ EOS
       type:      '<%= attribute['type'] %>',
       desc:      '<%= attribute['description'] %>',
       <%- if not attribute['default'].nil? -%>
-        <%- if attribute['type'] == 'Boolean' or attribute['type'] == 'Integer' or attribute['type'] == 'Hash' or attribute['type'] == 'Array' -%>
+        <%- if attribute['type'] == 'Boolean' or attribute['type'] == 'Integer' or attribute['type'] == 'Hash' or attribute['type'] == 'Array' or attribute['type'] == 'Optional[Array]' -%>
       default:   <%= attribute['default'] %>,
         <%- else -%>
       default:   '<%= attribute['default'] %>',
