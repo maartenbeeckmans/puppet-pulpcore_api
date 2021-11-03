@@ -26,7 +26,7 @@
 #
 class pulpcore_api (
   Boolean                $manage_agent_gems,
-  Array[String]          $agent_gems,
+  Hash[Hash]             $agent_gems,
   Hash[String,Hash]      $resources,
   Hash                   $container_container_mirrors,
   Hash                   $container_container_mirror_defaults,
@@ -41,13 +41,15 @@ class pulpcore_api (
   Variant[Boolean,Array] $purge_resources,
 ) {
   if $manage_agent_gems {
-    package { $agent_gems:
-      ensure   => installed,
-      provider => 'puppet_gem',
+    $agent_gems.each |String $agent_gem_name, Hash $options| {
+      package { $agent_gem_name:
+        ensure   => $options['version'],
+        provider => 'puppet_gem',
+      }
     }
   }
 
-  $resources.each |String $resource_type, Hash $instances| { 
+  $resources.each |String $resource_type, Hash $instances| {
     $instances.each |String $resource_name, Hash $resource| {
       ensure_resource("pulpcore_${resource_type}", $resource_name, $resource)
     }
