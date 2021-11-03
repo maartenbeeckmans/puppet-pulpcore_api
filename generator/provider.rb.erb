@@ -1,5 +1,9 @@
 require 'puppet/resource_api/simple_provider'
-require '<%= config_hash['client_import'] -%>'
+begin
+  require '<%= config_hash['client_import'] -%>'
+rescue LoadError
+  Puppet.warning("#{__FILE__}:#{__LINE__}: oauth gem was not found")
+end
 require 'puppet'
 require 'yaml'
 

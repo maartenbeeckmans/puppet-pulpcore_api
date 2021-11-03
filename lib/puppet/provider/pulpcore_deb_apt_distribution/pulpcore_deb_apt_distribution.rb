@@ -1,5 +1,9 @@
 require 'puppet/resource_api/simple_provider'
-require 'pulp_deb_client'
+begin
+  require 'pulp_deb_client'
+rescue LoadError
+  Puppet.warning("#{__FILE__}:#{__LINE__}: oauth gem was not found")
+end
 require 'puppet'
 require 'yaml'
 

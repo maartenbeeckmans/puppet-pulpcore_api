@@ -43,7 +43,7 @@ EOS
     },
     
     content_guard: {
-      type:      'Optional[String]',
+      type:      'String',
       desc:      'An optional content-guard. If none is specified, a default one will be used.',
     },
     
