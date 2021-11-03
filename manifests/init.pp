@@ -8,7 +8,7 @@
 #   If the agent gems should be managed
 #
 # @param agent_gems
-#   Array containing list of agent gems to install
+#   Hash containing agent gems to install with version
 #
 # @param resources
 #
@@ -26,7 +26,7 @@
 #
 class pulpcore_api (
   Boolean                $manage_agent_gems,
-  Hash[Hash]             $agent_gems,
+  Hash[String,Hash]      $agent_gems,
   Hash[String,Hash]      $resources,
   Hash                   $container_container_mirrors,
   Hash                   $container_container_mirror_defaults,
