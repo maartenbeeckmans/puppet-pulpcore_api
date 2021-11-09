@@ -1,8 +1,8 @@
-<%- | String $remote_href,
-      String $repository_href,
-      String $distribution_href,
-      String $name,
-      String $plugin,
+<%- | $remote_href,
+      $repository_href,
+      $distribution_href,
+      $name,
+      $plugin,
 | -%>
 # File managed by puppet (pulpcore_api)
 # Manual changes will be overwritten
