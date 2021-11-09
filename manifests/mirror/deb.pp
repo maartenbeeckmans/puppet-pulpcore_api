@@ -47,9 +47,9 @@ define pulpcore_api::mirror::deb (
   }
 
   $_sync_template = @(EOT)
-  <%- | $remote_href, $repository_href, $distribution_href | -%>
-  #!/bin/bash
-  /usr/local/bin/sync_mirror.sh <%= $remote_href %> <%= $repository_href %> <%= $distribution_href %>
+<%- | $remote_href, $repository_href, $distribution_href | -%>
+#!/bin/bash
+/usr/local/bin/sync_mirror.sh <%= $remote_href %> <%= $repository_href %> <%= $distribution_href %>
   EOT
   $_sync_config = {
     'remote_href'       => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
