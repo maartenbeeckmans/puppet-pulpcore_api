@@ -25,6 +25,6 @@ task_href=$(curl --insecure --netrc --silent --request POST --header "Content-Ty
 # Makin sure the repository is added to the distribution
 # Will perform a patch to the distribution object
 echo "Publishing repository"
-task_href=$(curl --insecure --netrc --silent --request PATCH --header "Content-Type: application/json" "${pulp_server}${distribution_href}" -d "{\"repository\":\"${repository_href}\"}")
+task_href=$(curl --insecure --netrc --silent --request PATCH --header "Content-Type: application/json" "${pulp_server}${distribution_href}" -d "{\"repository\":\"${repository_href}\"}" | jq '.task')
 
 /bin/pulp task show --wait --href ${task_href//'"'/''}
