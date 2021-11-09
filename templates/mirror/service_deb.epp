@@ -1,7 +1,4 @@
-<%- | $remote_href,
-      $repository_href,
-      $distribution_href,
-      $name,
+<%- | $name,
       $plugin,
 | -%>
 # File managed by puppet (pulpcore_api)
@@ -13,4 +10,4 @@ RefuseManualStop=yes
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/sync_mirror.sh <%= $remote_href %> <%= $repository_href %> <%= $distribution_href %>
+ExecStart=/usr/local/bin/sync_deb_mirror_<%= $name -%>

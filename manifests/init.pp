@@ -66,6 +66,7 @@ class pulpcore_api (
     ensure_resource ( 'file', '/usr/local/bin/sync_mirror.sh', {
       ensure  => 'present',
       content => epp("${module_name}/sync_mirror.sh.epp", {'pulp_server' => $pulp_server}),
+      mode    => '0755',
     })
     create_resources(pulpcore_api::mirror::deb, $deb_apt_mirrors, $deb_apt_mirror_defaults)
   }

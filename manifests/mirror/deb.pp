@@ -46,6 +46,23 @@ define pulpcore_api::mirror::deb (
     *          => $distribution_extra_options,
   }
 
+  $_sync_template = @(EOT)
+  <%- | $remote_href, $repository_href, $distribution_href | -%>
+  #!/bin/bash
+  /usr/local/bin/sync_mirror.sh <%= $remote_href %> <%= $repository_href %> <%= $distribution_href %>
+  EOT
+  $_sync_config = {
+    'remote_href'       => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
+    'repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', ["mirror-${name}"]),
+    'distribution_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_distribution', ["mirror-${name}"]),
+  }
+
+  file { "/usr/local/bin/sync_deb_mirror_${name}":
+    ensure  => 'present',
+    content => Deferred('inline_epp', [$_sync_template, $_sync_config]),
+    mode    => '0755',
+  }
+
   if $manage_timer {
     systemd::timer { "sync-mirror-${name}.timer":
       timer_content   => epp("${module_name}/mirror/timer.epp", {
@@ -53,16 +70,10 @@ define pulpcore_api::mirror::deb (
         'service'     => "sync-mirror-${name}.service",
         'on_calendar' => 'daily'
       }),
-      service_content => Deferred('epp', [
-        "${module_name}/mirror/service_deb.epp", 
-        {
-          'remote_href'       => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
-          'repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', ["mirror-${name}"]),
-          'distribution_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_distribution', ["mirror-${name}"]),
-          'name'              => "mirror-${name}",
-          'plugin'            => 'deb'
-        }
-      ]),
+      service_content => epp("${module_name}/mirror/service_deb.epp", {
+        'name'   => $name,
+        'plugin' => 'deb'
+      }),
     }
 
     service { "sync-mirror-${name}.timer":

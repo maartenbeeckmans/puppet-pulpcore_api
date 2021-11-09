@@ -16,7 +16,7 @@ define pulpcore_api::tree::rpm (
       project             => $project,
       releasever          => $releasever,
       basearch            => $basearch,
-      distribution_prefix => $distribution_prefix,      
+      distribution_prefix => $distribution_prefix,
     }
   )
 }
