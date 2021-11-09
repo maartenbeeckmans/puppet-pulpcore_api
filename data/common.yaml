@@ -1,4 +1,5 @@
 ---
+pulpcore_api::pulp_server: "http://%{facts.networking.fqdn}"
 pulpcore_api::manage_agent_gems: true
 pulpcore_api::agent_gems:
   pulpcore_client:
@@ -11,18 +12,18 @@ pulpcore_api::agent_gems:
     version: 1.9.0
   pulp_rpm_client:
     version: 3.15.0
-pulpcore_api::resources: {}
-pulpcore_api::container_container_mirrors: {}
-pulpcore_api::container_container_mirror_defaults: {}
-pulpcore_api::file_file_mirrors: {}
-pulpcore_api::deb_apt_mirrors: {}
-pulpcore_api::deb_apt_mirror_defaults: {}
-pulpcore_api::file_file_mirrors: {}
-pulpcore_api::file_file_mirror_defaults: {}
-pulpcore_api::rpm_rpm_mirrors: {}
-pulpcore_api::rpm_rpm_mirror_defaults: {}
-pulpcore_api::rpm_rpm_trees: {}
-pulpcore_api::rpm_rpm_tree_defaults: {}
+pulpcore_api::resources: ~
+pulpcore_api::container_container_mirrors: ~
+pulpcore_api::container_container_mirror_defaults: ~
+pulpcore_api::file_file_mirrors: ~
+pulpcore_api::deb_apt_mirrors: ~
+pulpcore_api::deb_apt_mirror_defaults: ~
+pulpcore_api::file_file_mirrors: ~
+pulpcore_api::file_file_mirror_defaults: ~
+pulpcore_api::rpm_rpm_mirrors: ~
+pulpcore_api::rpm_rpm_mirror_defaults: ~
+pulpcore_api::rpm_rpm_trees: ~
+pulpcore_api::rpm_rpm_tree_defaults: ~
 pulpcore_api::purge_resources:
   - pulpcore_container_container_distribution
   - pulpcore_container_container_remote

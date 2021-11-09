@@ -1,0 +1,59 @@
+<%- | String $pulp_server, | -%>
+#!/bin/bash
+#
+# File managed by Pupppet, all changes will be overwritten
+#
+# Wrapper script used for syncing repositories where the cli doesn't support it (example deb)
+#
+set -ex
+
+pulp_server=<%= $pulp_server %>
+remote_href=${1}
+repository_href=${2}
+distribution_href=${3}
+
+#
+# Functions
+#
+function wait_until_finished {
+  # Script that queries the task endpoint and waits until it's finished
+  local task=${1}
+  echo "Waiting until ${task} is finished"
+  while true
+  do
+    local state=$(curl --netrc -s -H "Content-Type: application/json" "http://${pulp_server}${task}" | jq -r '.state')
+    case ${state} in
+      failed|canceled)
+        echo "Task in final state: ${state}"
+        exit 1
+        ;;
+      completed)
+        echo "Task finished"
+        created_resource=$(curl --netrc -s -H "Content-Type: application/json" "http://${pulp_server}${task}" | jq -r '.created_resources|.[0]')
+        break
+        ;;
+      *)
+        echo "Still waiting..."
+        sleep 1
+        ;;
+    esac
+  done
+}
+
+
+#
+# Script prober
+#
+
+# Performing a sync task with the repository and the remove
+echo "Syncing repository with remote"
+task_href=$(curl --insecure --netrc --silent --request POST --header "Content-Type: application/json" "${pulp_server}${repository_href}sync/" -d "{\"remote\": \"${remote_href}\", \"mirror\": \"true\"}" | jq '.task')
+
+wait_until_finished $task_href
+
+# Makin sure the repository is added to the distribution
+# Will perform a patch to the distribution object
+echo "Publishing repository"
+task_href=$(curl --insecure --netrc --silent --request PATCH --header "Content-Type: application/json" "${pulp_server}${distribution_href}" -d "{\"repository\":\"${repository_href}\"}")
+
+wait_until_finished $task_href

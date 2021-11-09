@@ -1,0 +1,16 @@
+<%- | String $remote_href,
+      String $repository_href,
+      String $distribution_href,
+      String $name,
+      String $plugin,
+| -%>
+# File managed by puppet (pulpcore_api)
+# Manual changes will be overwritten
+[Unit]
+Description=Sync <%= $plugin %> mirror <%= $name %>
+RefuseManualStart=no
+RefuseManualStop=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sync_mirror.sh <%= $remote_href %> <%= $repository_href %> <%= $distribution_href %>

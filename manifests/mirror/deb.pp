@@ -33,15 +33,38 @@ define pulpcore_api::mirror::deb (
 
   # Create repository
   pulpcore_deb_apt_repository { "mirror-${name}":
-    ensure      => $ensure,
-    remote      => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
-    *           => $repository_extra_options,
+    ensure => $ensure,
+    remote => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
+    *      => $repository_extra_options,
   }
 
   # Create distribution
   pulpcore_deb_apt_distribution { "mirror-${name}":
     ensure     => $ensure,
     base_path  => $base_path,
+    repository => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', ["mirror-${name}"]),
     *          => $distribution_extra_options,
+  }
+
+  if $manage_timer {
+    systemd::timer { "sync-mirror-${name}.timer":
+      timer_content   => epp("${module_name}/mirror/timer.epp", {
+        'name'        => "mirror-${name}",
+        'service'     => "sync-mirror-${name}.service",
+        'on_calendar' => 'daily'
+      }),
+      service_content => epp("${module_name}/mirror/service_deb.epp", {
+        'remote_href'       => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_remote', ["mirror-${name}"]),
+        'repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', ["mirror-${name}"]),
+        'distribution_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_distribution', ["mirror-${name}"]),
+        'name'              => "mirror-${name}",
+        'plugin'            => 'deb'
+      }),
+    }
+
+    service { "sync-mirror-${name}.timer":
+      ensure    => running,
+      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+    }
   }
 }

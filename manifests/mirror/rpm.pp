@@ -37,8 +37,16 @@ define pulpcore_api::mirror::rpm (
 
   if $manage_timer {
     systemd::timer { "sync-mirror-${name}.timer":
-      timer_content   => epp("${module_name}/mirror/timer.epp", {'name' => "mirror-${name}", 'service' => "sync-mirror-${name}.service", 'on_calendar' => 'daily'}),
-      service_content => epp("${module_name}/mirror/service.epp", {'name' => "mirror-${name}", 'plugin' => 'rpm', 'mirror' => true}),
+      timer_content   => epp("${module_name}/mirror/timer.epp", {
+        'name'        => "mirror-${name}",
+        'service'     => "sync-mirror-${name}.service",
+        'on_calendar' => 'daily'
+      }),
+      service_content => epp("${module_name}/mirror/service.epp", {
+        'name'   => "mirror-${name}",
+        'plugin' => 'rpm',
+        'mirror' => true
+      }),
     }
 
     service { "sync-mirror-${name}.timer":

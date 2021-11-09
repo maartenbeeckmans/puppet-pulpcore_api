@@ -12,6 +12,7 @@ define pulpcore_api::tree::rpm::step (
   Integer          $retain_package_versions = 0,
   String           $environment             = $title,
   String           $concat_target           = "/usr/local/bin/promote-${project}-${environment}",
+  String           $pulp_server             = $::pulpcore_api::pulp_server,
 ) {
   $repositories.each |$key, $value| {
     pulpcore_api::tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
@@ -33,6 +34,7 @@ define pulpcore_api::tree::rpm::step (
   }
 
   $_copy_template = @(EOT)
+  <%- | String $pulp_server, | -%>
   #!/bin/bash
   #
   # File managed by Puppet
@@ -40,15 +42,14 @@ define pulpcore_api::tree::rpm::step (
   #
   set -ex
 
-  pulp_server=pulp.development.beeckmans.cloud
-  pulp_port=80
+  pulp_server=<%= $pulp_server %>
 
   function wait_until_finished {
     local task=${1}
     echo "Waiting until ${task} is finished"
     while true
     do
-      local state=$(curl --netrc -s -H "Content-Type: application/json" "http://${pulp_server}:${pulp_port}${task}" | jq -r '.state')
+      local state=$(curl --netrc -s -H "Content-Type: application/json" "${pulp_server}${task}" | jq -r '.state')
       case ${state} in
         failed|canceled)
           echo "Task in final state: ${state}"
@@ -56,7 +57,7 @@ define pulpcore_api::tree::rpm::step (
           ;;
         completed)
           echo "Task finished"
-          created_resource=$(curl --netrc -s -H "Content-Type: application/json" "http://${pulp_server}:${pulp_port}${task}" | jq -r '.created_resources|.[0]')
+          created_resource=$(curl --netrc -s -H "Content-Type: application/json" "${pulp_server}${task}" | jq -r '.created_resources|.[0]')
           break
           ;;
         *)
@@ -70,7 +71,7 @@ define pulpcore_api::tree::rpm::step (
 
   concat::fragment { "${project}-${environment}-header":
     target  => $concat_target,
-    content => inline_epp($_copy_template),
+    content => inline_epp($_copy_template, {'pulp_server' => $pulp_server}),
     order   => '01',
   }
 }

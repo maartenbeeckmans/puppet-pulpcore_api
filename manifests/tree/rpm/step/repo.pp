@@ -29,8 +29,8 @@ define pulpcore_api::tree::rpm::step::repo (
     <%- | $repo_name, $upstream_name, $repo_href, $upstream_href | -%>
     echo 'Syncing <%= $repo_name %> from <%= $upstream_name %>'
     echo 'Syncing <%= $repo_href %> from <%= $upstream_href %>'
-    latest_version_href=$(curl --netrc -k -s -H "Content-Type: application/json" "http://${pulp_server}:${pulp_port}<%= $upstream_href -%>" | jq .latest_version_href)"
-    task_href=$(curl --netrc -k -s "Content-Type: application/json" "http://${pulp_server}:${pulp_port}<%= $upstream_href -%>modify/ -d \"{\"base_version\": [ \"${latest_version_href}\" ] }\"")
+    latest_version_href=$(curl --netrc -k -s -H "Content-Type: application/json" "http://${pulp_server}<%= $upstream_href -%>" | jq .latest_version_href)"
+    task_href=$(curl --netrc -k -s "Content-Type: application/json" "http://${pulp_server}<%= $upstream_href -%>modify/ -d \"{\"base_version\": [ \"${latest_version_href}\" ] }\"")
 
     | EOT
     $_copy_config = {
