@@ -7,6 +7,7 @@ define pulpcore_api::mirror::file (
   Enum[present, absent] $ensure                     = 'present',
   String                $policy                     = 'immediate',
   Boolean               $manage_timer               = true,
+  String                $timer_on_calendar          = 'daily',
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
@@ -36,7 +37,7 @@ define pulpcore_api::mirror::file (
 
   if $manage_timer {
     systemd::timer { "sync-file-mirror-${name}.timer":
-      timer_content   => epp("${module_name}/mirror/timer.epp", {'name' => "file-mirror-${name}", 'service' => "sync-file-mirror-${name}.service", 'on_calendar' => 'daily'}),
+      timer_content   => epp("${module_name}/mirror/timer.epp", {'name' => "file-mirror-${name}", 'service' => "sync-file-mirror-${name}.service", 'on_calendar' => $timer_on_calendar}),
       service_content => epp("${module_name}/mirror/service.epp", {'name' => "file-mirror-${name}", 'plugin' => 'file'}),
     }
 

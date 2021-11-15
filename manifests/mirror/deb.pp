@@ -13,6 +13,7 @@ define pulpcore_api::mirror::deb (
   Enum[present, absent] $ensure                     = 'present',
   String                $policy                     = 'immediate',
   Boolean               $manage_timer               = true,
+  String                $timer_on_calendar          = 'daily',
   Boolean               $mirror                     = true,
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
@@ -68,7 +69,7 @@ define pulpcore_api::mirror::deb (
       timer_content   => epp("${module_name}/mirror/timer.epp", {
         'name'        => "mirror-${name}",
         'service'     => "sync-mirror-${name}.service",
-        'on_calendar' => 'daily'
+        'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/mirror/service_deb.epp", {
         'name'   => $name,
