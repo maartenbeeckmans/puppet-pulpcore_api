@@ -19,6 +19,7 @@ define pulpcore_api::mirror::deb (
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
 ) {
+
   # Create remote
   pulpcore_deb_apt_remote { "mirror-${name}":
     ensure         => $ensure,
@@ -48,6 +49,12 @@ define pulpcore_api::mirror::deb (
     *          => $distribution_extra_options,
   }
 
+  ensure_resource ( 'file', '/usr/local/bin/sync_mirror.sh', {
+    ensure  => 'present',
+    content => epp("${module_name}/sync_mirror.sh.epp", {'pulp_server' => $::pulpcore_api::pulp_server}),
+    mode    => '0755',
+  })
+
   $_sync_template = @(EOT)
 <%- | $remote_href, $repository_href, $distribution_href | -%>
 #!/bin/bash
@@ -63,6 +70,7 @@ define pulpcore_api::mirror::deb (
     ensure  => 'present',
     content => Deferred('inline_epp', [$_sync_template, $_sync_config]),
     mode    => '0755',
+    require => File['/usr/local/bin/sync_mirror.sh'],
   }
 
   if $manage_timer {
@@ -76,6 +84,7 @@ define pulpcore_api::mirror::deb (
         'name'   => $name,
         'plugin' => 'deb'
       }),
+      require         => File["/usr/local/bin/sync_deb_mirror_${name}"],
     }
 
     service { "sync-mirror-${name}.timer":
