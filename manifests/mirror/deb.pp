@@ -23,6 +23,7 @@ define pulpcore_api::mirror::deb (
   pulpcore_deb_apt_remote { "mirror-${name}":
     ensure         => $ensure,
     url            => $url,
+    policy         => $policy,
     distributions  => $distributions,
     components     => $components,
     architectures  => $architectures,

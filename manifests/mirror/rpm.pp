@@ -17,6 +17,7 @@ define pulpcore_api::mirror::rpm (
   pulpcore_rpm_rpm_remote { "mirror-${name}":
     ensure => $ensure,
     url    => $url,
+    policy => $policy,
     *      => $remote_extra_options,
   }
 

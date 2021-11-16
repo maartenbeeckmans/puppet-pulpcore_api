@@ -19,6 +19,7 @@ define pulpcore_api::mirror::container (
   pulpcore_container_container_remote { "container-mirror-${name}":
     ensure        => $ensure,
     url           => $url,
+    policy        => $policy,
     upstream_name => $upstream_name,
     *             => $remote_extra_options,
   }

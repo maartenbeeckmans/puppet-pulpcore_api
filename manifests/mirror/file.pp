@@ -16,6 +16,7 @@ define pulpcore_api::mirror::file (
   pulpcore_file_file_remote { "file-mirror-${name}":
     ensure => $ensure,
     url    => $url,
+    policy => $policy,
     *      => $remote_extra_options,
   }
 
