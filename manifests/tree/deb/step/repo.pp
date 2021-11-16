@@ -6,7 +6,6 @@
 #   pulpcore_api::tree::deb::step::repo { 'namevar': }
 define pulpcore_api::tree::deb::step::repo (
   String           $distribution_prefix,
-  Integer          $retain_package_versions,
   String           $concat_target,
   Optional[String] $upstream,
 ) {
@@ -14,7 +13,6 @@ define pulpcore_api::tree::deb::step::repo (
     $title,
     {
       description             => $title,
-      retain_package_versions => $retain_package_versions,
     }
   )
 

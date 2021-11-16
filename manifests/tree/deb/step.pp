@@ -10,7 +10,6 @@ define pulpcore_api::tree::deb::step (
   String           $distribution_prefix,
   Boolean          $first_target            = false,
   Optional[String] $upstream                = undef,
-  Integer          $retain_package_versions = 0,
   String           $environment             = $title,
   String           $concat_target           = "/usr/local/bin/promote-deb-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
@@ -22,7 +21,6 @@ define pulpcore_api::tree::deb::step (
         default => "${project}-${upstream}-${key}",
       },
       distribution_prefix     => "${distribution_prefix}/${project}/${environment}",
-      retain_package_versions => $retain_package_versions,
       concat_target           => $concat_target,
     }
   }
