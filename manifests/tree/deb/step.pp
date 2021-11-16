@@ -1,26 +1,27 @@
+# @summary A short summary of the purpose of this defined type.
 #
+# A description of what this defined type does
 #
-#
-define pulpcore_api::tree::rpm::step (
+# @example
+#   pulpcore_api::tree::deb::step { 'namevar': }
+define pulpcore_api::tree::deb::step (
   Hash             $repositories,
   String           $project,
-  String           $releasever,
-  String           $basearch,
   String           $distribution_prefix,
   Boolean          $first_target            = false,
   Optional[String] $upstream                = undef,
   Integer          $retain_package_versions = 0,
   String           $environment             = $title,
-  String           $concat_target           = "/usr/local/bin/promote-rpm-${project}-${environment}",
+  String           $concat_target           = "/usr/local/bin/promote-deb-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
 ) {
   $repositories.each |$key, $value| {
-    pulpcore_api::tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
+    pulpcore_api::tree::deb { "${project}-${environment}-${key}":
       upstream                => $first_target ? {
         true    => $value['upstream'],
-        default => "${project}-${upstream}-${releasever}-${basearch}-${key}",
+        default => "${project}-${upstream}-${key}",
       },
-      distribution_prefix     => "${distribution_prefix}/${project}/${environment}/${releasever}/${basearch}",
+      distribution_prefix     => "${distribution_prefix}/${project}/${environment}",
       retain_package_versions => $retain_package_versions,
       concat_target           => $concat_target,
     }
@@ -46,7 +47,7 @@ define pulpcore_api::tree::rpm::step (
 
   | EOT
 
-  concat::fragment { "rpm-${project}-${environment}-header":
+  concat::fragment { "deb-${project}-${environment}-header":
     target  => $concat_target,
     content => inline_epp($_copy_template, {'pulp_server' => $pulp_server}),
     order   => '01',

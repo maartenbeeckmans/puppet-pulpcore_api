@@ -23,6 +23,8 @@ pulpcore_api::file_file_mirrors: ~
 pulpcore_api::file_file_mirror_defaults: {}
 pulpcore_api::rpm_rpm_mirrors: ~
 pulpcore_api::rpm_rpm_mirror_defaults: {}
+pulpcore_api::deb_apt_trees: ~
+pulpcore_api::deb_apt_tree_defaults: {}
 pulpcore_api::rpm_rpm_trees: ~
 pulpcore_api::rpm_rpm_tree_defaults: {}
 pulpcore_api::purge_resources:

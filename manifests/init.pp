@@ -37,6 +37,8 @@ class pulpcore_api (
   Hash                        $file_file_mirror_defaults,
   Optional[Hash]              $rpm_rpm_mirrors,
   Hash                        $rpm_rpm_mirror_defaults,
+  Optional[Hash]              $deb_apt_trees,
+  Hash                        $deb_apt_tree_defaults,
   Optional[Hash]              $rpm_rpm_trees,
   Hash                        $rpm_rpm_tree_defaults,
   Variant[Boolean,Array]      $purge_resources,
@@ -77,6 +79,10 @@ class pulpcore_api (
 
   if $rpm_rpm_mirrors {
     create_resources(pulpcore_api::mirror::rpm, $rpm_rpm_mirrors, $rpm_rpm_mirror_defaults)
+  }
+
+  if $deb_apt_trees {
+    create_resources(pulpcore_api::tree::deb, $deb_apt_trees, $deb_apt_tree_defaults)
   }
 
   if $rpm_rpm_trees {

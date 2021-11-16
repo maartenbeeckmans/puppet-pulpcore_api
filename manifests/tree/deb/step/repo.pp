@@ -1,26 +1,28 @@
+# @summary A short summary of the purpose of this defined type.
 #
+# A description of what this defined type does
 #
-#
-define pulpcore_api::tree::rpm::step::repo (
+# @example
+#   pulpcore_api::tree::deb::step::repo { 'namevar': }
+define pulpcore_api::tree::deb::step::repo (
   String           $distribution_prefix,
   Integer          $retain_package_versions,
   String           $concat_target,
   Optional[String] $upstream,
 ) {
-  ensure_resource ( 'pulpcore_rpm_rpm_repository',
+  ensure_resource ( 'pulpcore_deb_apt_repository',
     $title,
     {
       description             => $title,
-      autopublish             => true,
       retain_package_versions => $retain_package_versions,
     }
   )
 
-  ensure_resource ( 'pulpcore_rpm_rpm_distribution',
+  ensure_resource ( 'pulpcore_deb_apt_distribution',
     $title,
     {
       base_path  => "${distribution_prefix}/${split($title, '-')[-1]}",
-      repository => Deferred('pulpcore::get_pulp_href_pulpcore_rpm_rpm_repository', [$title]),
+      repository => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
     }
   )
 
@@ -37,16 +39,16 @@ define pulpcore_api::tree::rpm::step::repo (
     $_copy_config = {
       'repo_name'     => $title,
       'upstream_name' => $upstream,
-      'repo_href'     => Deferred('pulpcore::get_pulp_href_pulpcore_rpm_rpm_repository', [$title]),
-      'upstream_href' => Deferred('pulpcore::get_pulp_href_pulpcore_rpm_rpm_repository', [$upstream])
+      'repo_href'     => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
+      'upstream_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$upstream])
     }
 
-    concat::fragment { "rpm-${title}-upstream":
+    concat::fragment { "deb-${title}-upstream":
       target  => $concat_target,
       content => Deferred('inline_epp', [$_copy_template, $_copy_config]),
       order   => '10',
     }
   }
 
-  Pulpcore_rpm_rpm_repository[$title] -> Pulpcore_rpm_rpm_distribution[$title]
+  Pulpcore_deb_apt_repository[$title] -> Pulpcore_deb_apt_distribution[$title]
 }
