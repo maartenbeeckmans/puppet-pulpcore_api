@@ -34,7 +34,6 @@ define pulpcore_api::tree::rpm::step (
   }
 
   $_copy_template = @(EOT)
-  <%- | String $pulp_server, | -%>
   #!/bin/bash
   #
   # File managed by Puppet
@@ -42,13 +41,11 @@ define pulpcore_api::tree::rpm::step (
   #
   set -ex
 
-  pulp_server=<%= $pulp_server %>
-
   | EOT
 
   concat::fragment { "rpm-${project}-${environment}-header":
     target  => $concat_target,
-    content => inline_epp($_copy_template, {'pulp_server' => $pulp_server}),
+    content => inline_epp($_copy_template),
     order   => '01',
   }
 }

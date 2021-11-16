@@ -18,4 +18,10 @@ define pulpcore_api::tree::deb (
       distribution_prefix => $distribution_prefix,
     }
   )
+
+  ensure_resource ( 'file', '/usr/local/bin/sync_repository.sh', {
+    ensure  => 'present',
+    content => epp("${module_name}/sync_repository.sh.epp", {'pulp_server' => $::pulpcore_api::pulp_server}),
+    mode    => '0755',
+  })
 }

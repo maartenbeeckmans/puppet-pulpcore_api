@@ -16,12 +16,12 @@ define pulpcore_api::tree::deb::step (
 ) {
   $repositories.each |$key, $value| {
     pulpcore_api::tree::deb::step::repo { "${project}-${environment}-${key}":
-      upstream                => $first_target ? {
+      upstream            => $first_target ? {
         true    => $value['upstream'],
         default => "${project}-${upstream}-${key}",
       },
-      distribution_prefix     => "${distribution_prefix}/${project}/${environment}",
-      concat_target           => $concat_target,
+      distribution_prefix => "${distribution_prefix}/${project}/${environment}",
+      concat_target       => $concat_target,
     }
   }
 
@@ -33,7 +33,6 @@ define pulpcore_api::tree::deb::step (
   }
 
   $_copy_template = @(EOT)
-  <%- | String $pulp_server, | -%>
   #!/bin/bash
   #
   # File managed by Puppet
@@ -41,13 +40,11 @@ define pulpcore_api::tree::deb::step (
   #
   set -ex
 
-  pulp_server=<%= $pulp_server %>
-
   | EOT
 
   concat::fragment { "deb-${project}-${environment}-header":
     target  => $concat_target,
-    content => inline_epp($_copy_template, {'pulp_server' => $pulp_server}),
+    content => inline_epp($_copy_template),
     order   => '01',
   }
 }

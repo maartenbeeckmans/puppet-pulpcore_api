@@ -26,19 +26,15 @@ define pulpcore_api::tree::deb::step::repo (
 
   if $upstream {
     $_copy_template = @(EOT)
-    <%- | $repo_name, $upstream_name, $repo_href, $upstream_href | -%>
-    echo 'Syncing <%= $repo_name %> from <%= $upstream_name %>'
-    echo 'Syncing <%= $repo_href %> from <%= $upstream_href %>'
-    latest_version_href=$(curl --netrc -k -s -H "Content-Type: application/json" "http://${pulp_server}<%= $upstream_href -%>" | jq .latest_version_href)"
-    task_href=$(curl --netrc -k -s "Content-Type: application/json" "http://${pulp_server}<%= $upstream_href -%>modify/ -d \"{\"base_version\": [ \"${latest_version_href}\" ] }\"")
-    /bin/pulp task show --wait --href ${task_href//'"'/''}
+    <%- | $src_repository_href, $dst_repository_href, $dst_distribution_href | -%>
+    /usr/local/bin/sync_repository.sh <%= $src_repository_href %> <%= $dst_repository_href %> <%= $dst_distribution_href %>
 
     | EOT
+
     $_copy_config = {
-      'repo_name'     => $title,
-      'upstream_name' => $upstream,
-      'repo_href'     => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
-      'upstream_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$upstream])
+      'src_repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$upstream]),
+      'dst_repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
+      'dst_distribution_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_distribution', [$title]),
     }
 
     concat::fragment { "deb-${title}-upstream":
