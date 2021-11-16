@@ -16,7 +16,7 @@ define pulpcore_api::tree::deb::step (
   String           $pulp_server             = $::pulpcore_api::pulp_server,
 ) {
   $repositories.each |$key, $value| {
-    pulpcore_api::tree::deb { "${project}-${environment}-${key}":
+    pulpcore_api::tree::deb::step::repo { "${project}-${environment}-${key}":
       upstream                => $first_target ? {
         true    => $value['upstream'],
         default => "${project}-${upstream}-${key}",
