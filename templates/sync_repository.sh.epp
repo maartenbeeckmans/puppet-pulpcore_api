@@ -5,7 +5,7 @@
 #
 # Wrapper script used for syncing repositories as the cli is not supporting it
 #
-set -ex
+set -e
 
 pulp_server=<%= $pulp_server %>
 src_repository_href=${1}

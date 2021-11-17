@@ -38,7 +38,7 @@ define pulpcore_api::tree::deb::step (
   # File managed by Puppet
   # All manual changes will be overwritten
   #
-  set -ex
+  set -e
 
   | EOT
 

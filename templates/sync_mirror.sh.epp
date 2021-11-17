@@ -5,7 +5,7 @@
 #
 # Wrapper script used for syncing repositories where the cli doesn't support it (example deb)
 #
-set -ex
+set -e
 
 pulp_server=<%= $pulp_server %>
 remote_href=${1}
