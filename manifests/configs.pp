@@ -7,7 +7,7 @@ class pulpcore_api::configs (
   Boolean $manage_api_config = $::pulpcore_api::manage_api_config,
   Boolean $manage_cli_config = $::pulpcore_api::manage_cli_config,
   Boolean $manage_netrc = $::pulpcore_api::manage_netrc,
-  String $cli_package = $::pulpcore_api::cli_package,
+  Optional[String] $cli_package = $::pulpcore_api::cli_package,
   String $cli_package_ensure = $::pulpcore_api::cli_package_ensure,
 ) {
 
