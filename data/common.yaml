@@ -22,8 +22,6 @@ pulpcore_api::agent_gems:
 pulpcore_api::resources: ~
 pulpcore_api::container_container_mirrors: ~
 pulpcore_api::container_container_mirror_defaults: {}
-pulpcore_api::file_file_mirrors: ~
-pulpcore_api::file_file_mirror_defaults: {}
 pulpcore_api::deb_apt_mirrors: ~
 pulpcore_api::deb_apt_mirror_defaults: {}
 pulpcore_api::file_file_mirrors: ~
