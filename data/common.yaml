@@ -1,5 +1,8 @@
 ---
 pulpcore_api::pulp_server: "http://%{facts.networking.fqdn}"
+pulpcore_api::pulp_username: admin
+pulpcore_api::pulp_password: admin
+pulpcore_api::ssl_verify: true
 pulpcore_api::manage_agent_gems: true
 pulpcore_api::agent_gems:
   pulpcore_client:
@@ -12,6 +15,7 @@ pulpcore_api::agent_gems:
     version: 1.9.0
   pulp_rpm_client:
     version: 3.15.0
+pulpcore_api::manage_api_config: true
 pulpcore_api::resources: ~
 pulpcore_api::container_container_mirrors: ~
 pulpcore_api::container_container_mirror_defaults: {}

@@ -26,6 +26,10 @@
 #
 class pulpcore_api (
   String                      $pulp_server,
+  Boolean                     $manage_api_config,
+  String                      $pulp_username,
+  String                      $pulp_password,
+  Boolean                     $ssl_verify,
   Boolean                     $manage_agent_gems,
   Hash[String,Hash]           $agent_gems,
   Optional[Hash[String,Hash]] $resources,
@@ -49,6 +53,19 @@ class pulpcore_api (
         ensure   => $options['version'],
         provider => 'puppet_gem',
       }
+    }
+  }
+
+  if $manage_api_config {
+    file{ '/etc/puppetlabs/puppet/pulpcoreapi.yaml':
+      ensure  => file,
+      content => to_yaml({
+        scheme     => split($pulp_server, '://')[0],
+        host       => split($pulp_server, '://')[1],
+        username   => $pulp_username,
+        password   => $pulp_password,
+        ssl_verify => $ssl_verify,
+      }),
     }
   }
 
