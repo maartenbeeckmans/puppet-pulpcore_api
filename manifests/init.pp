@@ -31,6 +31,7 @@ class pulpcore_api (
   Boolean                     $ssl_verify,
   Boolean                     $manage_api_config,
   Boolean                     $manage_cli_config,
+  Boolean                     $manage_netrc,
   Optional[String]            $cli_package,
   String                      $cli_package_ensure,
   Boolean                     $manage_agent_gems,

@@ -6,6 +6,7 @@ class pulpcore_api::configs (
   Boolean $ssl_verify = $::pulpcore_api::ssl_verify,
   Boolean $manage_api_config = $::pulpcore_api::manage_api_config,
   Boolean $manage_cli_config = $::pulpcore_api::manage_cli_config,
+  Boolean $manage_netrc = $::pulpcore_api::manage_netrc,
   String $cli_package = $::pulpcore_api::cli_package,
   String $cli_package_ensure = $::pulpcore_api::cli_package_ensure,
 ) {
@@ -20,6 +21,7 @@ class pulpcore_api::configs (
         scheme     => $scheme,
         ssl_verify => $ssl_verify,
       }),
+      mode    => '0640',
     }
   }
 
@@ -52,7 +54,26 @@ class pulpcore_api::configs (
     file{ '/root/.config/pulp/cli.toml':
       ensure  => file,
       content => $cli_config,
+      mode    => '0640',
       require => Exec['mkdir-root-config-pulp'],
+    }
+
+  }
+
+
+  if $manage_netrc {
+
+    $netrc = @("NETRC")
+      # This file is managed by puppet - DO NOT EDIT
+      machine ${pulp_host}
+      login ${pulp_username}
+      password ${pulp_password}
+      | NETRC
+
+    file{ '/root/.netrc':
+      ensure  => file,
+      content => $netrc,
+      mode    => '0640',
     }
 
   }
