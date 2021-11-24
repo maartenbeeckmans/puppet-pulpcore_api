@@ -26,6 +26,14 @@
 #
 class pulpcore_api (
   String                      $pulp_server,
+  String                      $pulp_username,
+  String                      $pulp_password,
+  Boolean                     $ssl_verify,
+  Boolean                     $manage_api_config,
+  Boolean                     $manage_cli_config,
+  Boolean                     $manage_netrc,
+  Optional[String]            $cli_package,
+  String                      $cli_package_ensure,
   Boolean                     $manage_agent_gems,
   Hash[String,Hash]           $agent_gems,
   Optional[Hash[String,Hash]] $resources,
@@ -51,6 +59,8 @@ class pulpcore_api (
       }
     }
   }
+
+  include pulpcore_api::configs
 
   if $resources {
     $resources.each |String $resource_type, Hash $instances| {
