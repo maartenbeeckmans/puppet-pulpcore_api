@@ -60,7 +60,7 @@ class pulpcore_api (
     }
   }
 
-  include pulpcore_api::configs
+  include pulpcore_api::config
 
   if $resources {
     $resources.each |String $resource_type, Hash $instances| {

@@ -82,6 +82,6 @@ define pulpcore_api::config::cli (
     ensure  => file,
     content => $cli_config,
     mode    => '0640',
-    require => Exec["mkdir-${_homedir}-config-pulp"],
+    require => Exec["mkdir-${localuser}-config-pulp"],
   }
 }
