@@ -45,6 +45,11 @@ define pulpcore_api::config::cli (
 ) {
   if $cli_package {
     ensure_resource('package', $cli_package, { ensure => $cli_package_ensure, })
+    ensure_resource('file', '/etc/profile.d/pulp.sh', {
+      ensure  => file,
+      mode    => '0644',
+      content => 'eval "$(_PULP_COMPLETE=source_bash pulp)"',
+    })
   }
 
   if $homedir {
