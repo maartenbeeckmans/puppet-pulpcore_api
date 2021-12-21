@@ -4,8 +4,10 @@ pulpcore_api::pulp_username: admin
 pulpcore_api::pulp_password: admin
 pulpcore_api::ssl_verify: true
 pulpcore_api::manage_api_config: true
-pulpcore_api::manage_cli_config: true
-pulpcore_api::manage_netrc: true
+pulpcore_api::cli_users:
+  root: {}
+pulpcore_api::netrc_users:
+  root: {}
 pulpcore_api::cli_package: ~
 pulpcore_api::cli_package_ensure: installed
 pulpcore_api::manage_agent_gems: true
