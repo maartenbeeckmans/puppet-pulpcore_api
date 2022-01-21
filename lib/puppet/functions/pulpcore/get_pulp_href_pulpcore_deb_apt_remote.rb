@@ -21,7 +21,7 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_pulpcore_deb_apt_rem
     begin
       response = api_instance.list({limit: 1, name: name}).to_hash
       if response[:count] != 1
-        return :undef
+        return nil
       else
         return response[:results][0][:pulp_href]
       end
