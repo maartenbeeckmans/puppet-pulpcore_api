@@ -47,7 +47,7 @@ define pulpcore_api::mirror::rpm (
       service_content => epp("${module_name}/mirror/service.epp", {
         'name'   => "mirror-${name}",
         'plugin' => 'rpm',
-        'mirror' => true
+        'mirror' => $mirror,
       }),
     }
 
