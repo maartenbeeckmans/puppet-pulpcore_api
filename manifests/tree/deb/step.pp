@@ -13,12 +13,19 @@ define pulpcore_api::tree::deb::step (
   String           $environment             = $title,
   String           $concat_target           = "/usr/local/bin/promote-deb-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
+  Boolean          $manage_timer            = true,
+  String           $timer_on_calendar       = 'daily',
 ) {
   $repositories.each |$key, $value| {
     pulpcore_api::tree::deb::step::repo { "${project}-${environment}-${key}":
-      upstream            => $first_target ? {
+      upstream            => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
         default => "${project}-${upstream}-${key}",
+      },
+      sync_with_upstream  => $value['sync_with_upstream'] ? { #lint:ignore:selector_inside_resource
+        true    => true,
+        false   => false,
+        default => true,
       },
       distribution_prefix => "${distribution_prefix}/${project}/${environment}",
       concat_target       => $concat_target,
@@ -46,5 +53,24 @@ define pulpcore_api::tree::deb::step (
     target  => $concat_target,
     content => inline_epp($_copy_template),
     order   => '01',
+  }
+
+  if $manage_timer {
+    systemd::timer { "promote-deb-${project}-${environment}.timer":
+      timer_content   => epp("${module_name}/tree/timer.epp", {
+        'name'        => "promote-deb-${project}-${environment}",
+        'service'     => "promote-deb-${project}-${environment}.service",
+        'on_calendar' => $timer_on_calendar,
+      }),
+      service_content => epp("${module_name}/tree/service.epp", {
+        'name'        => "promote-deb-${project}-${environment}",
+        'script_path' => $concat_target,
+      }),
+    }
+
+    service { "promote-deb-${project}-${environment}.timer":
+      ensure    => running,
+      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+    }
   }
 }

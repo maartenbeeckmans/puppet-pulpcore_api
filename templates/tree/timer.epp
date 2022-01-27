@@ -1,0 +1,16 @@
+<%- | String $name,
+      String $service,
+      String $on_calendar
+| -%>
+# File managed by puppet (pulpcore_api)
+# Manual changes will be overwritten
+[Unit]
+Description=<%= $name %>
+RefuseManualStart=no
+RefuseManualStop=yes
+
+[Timer]
+Persistent=false
+Unit=<%= $service %>
+OnCalendar=<%= $on_calendar %>
+RandomizedDelaySec=1d

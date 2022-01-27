@@ -13,12 +13,19 @@ define pulpcore_api::tree::rpm::step (
   String           $environment             = $title,
   String           $concat_target           = "/usr/local/bin/promote-rpm-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
+  Boolean          $manage_timer            = true,
+  String           $timer_on_calendar       = 'daily',
 ) {
   $repositories.each |$key, $value| {
     pulpcore_api::tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
-      upstream                => $first_target ? {
+      upstream                => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
         default => "${project}-${upstream}-${releasever}-${basearch}-${key}",
+      },
+      sync_with_upstream      => $value['sync_with_upstream'] ? { #lint:ignore:selector_inside_resource
+        true    => true,
+        false   => false,
+        default => true,
       },
       distribution_prefix     => "${distribution_prefix}/${project}/${environment}/${releasever}/${basearch}",
       retain_package_versions => $retain_package_versions,
@@ -47,5 +54,24 @@ define pulpcore_api::tree::rpm::step (
     target  => $concat_target,
     content => inline_epp($_copy_template),
     order   => '01',
+  }
+
+  if $manage_timer {
+    systemd::timer { "promote-rpm-${project}-${environment}.timer":
+      timer_content   => epp("${module_name}/tree/timer.epp", {
+        'name'        => "promote-rpm-${project}-${environment}",
+        'service'     => "promote-rpm-${project}-${environment}.service",
+        'on_calendar' => $timer_on_calendar,
+      }),
+      service_content => epp("${module_name}/tree/service.epp", {
+        'name'        => "rpm ${project} ${environment}",
+        'script_path' => $concat_target,
+      }),
+    }
+
+    service { "promote-rpm-${project}-${environment}.timer":
+      ensure    => running,
+      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+    }
   }
 }

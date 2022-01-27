@@ -1,0 +1,13 @@
+<%- | String $name,
+      String $script_path,
+| -%>
+# File managed by puppet (pulpcore_api)
+# Manual changes will be overwritten
+[Unit]
+Description=<%= $name %>
+RefuseManualStart=no
+RefuseManualStop=yes
+
+[Service]
+Type=oneshot
+ExecStart=<%= $script_path -%>

@@ -8,6 +8,7 @@ define pulpcore_api::tree::deb::step::repo (
   String           $distribution_prefix,
   String           $concat_target,
   Optional[String] $upstream,
+  Boolean          $sync_with_upstream      = true,
 ) {
   ensure_resource ( 'pulpcore_deb_apt_repository',
     $title,
@@ -24,7 +25,7 @@ define pulpcore_api::tree::deb::step::repo (
     }
   )
 
-  if $upstream {
+  if $upstream and $sync_with_upstream {
     $_copy_template = @(EOT)
     <%- | $src_repository_href, $dst_repository_href, $dst_distribution_href | -%>
     /usr/local/bin/sync_repository.sh <%= $src_repository_href %> <%= $dst_repository_href %> <%= $dst_distribution_href %>
