@@ -71,7 +71,7 @@ define pulpcore_api::tree::rpm::step (
 
     service { "promote-rpm-${project}-${environment}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+      subscribe => Systemd::Timer["promote-rpm-${project}-${environment}.timer"],
     }
   }
 }

@@ -70,7 +70,7 @@ define pulpcore_api::tree::deb::step (
 
     service { "promote-deb-${project}-${environment}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+      subscribe => Systemd::Timer["promote-deb-${project}-${environment}.timer"],
     }
   }
 }
