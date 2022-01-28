@@ -25,8 +25,8 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_pulpcore_deb_apt_pub
       else
         return response[:results][0][:pulp_href]
       end
-    rescue PulpFileClient::ApiError => e
-      raise "Exception when calling PulpFileClient->list: #{e}"
+    rescue PulpDebClient::ApiError => e
+      raise "Exception when calling PulpDebClient->list: #{e}"
     end
   end
 end

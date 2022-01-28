@@ -25,8 +25,8 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_pulpcore_rpm_rpm_rep
       else
         return response[:results][0][:pulp_href]
       end
-    rescue PulpFileClient::ApiError => e
-      raise "Exception when calling PulpFileClient->list: #{e}"
+    rescue PulpRpmClient::ApiError => e
+      raise "Exception when calling PulpRpmClient->list: #{e}"
     end
   end
 end

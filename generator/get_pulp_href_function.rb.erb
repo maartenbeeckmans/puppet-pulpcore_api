@@ -25,8 +25,8 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_<%= config_hash['nam
       else
         return response[:results][0][:pulp_href]
       end
-    rescue PulpFileClient::ApiError => e
-      raise "Exception when calling PulpFileClient->list: #{e}"
+    rescue <%= config_hash['client_binding'] -%>::ApiError => e
+      raise "Exception when calling <%= config_hash['client_binding'] -%>->list: #{e}"
     end
   end
 end
