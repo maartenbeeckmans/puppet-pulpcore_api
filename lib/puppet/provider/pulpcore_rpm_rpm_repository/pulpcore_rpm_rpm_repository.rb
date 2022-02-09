@@ -27,7 +27,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmRepository::PulpcoreRpmRpmRepository < P
     if @instances.empty?
       parsed_objects = []
       begin
-        @api_instance.list.to_hash[:results].each do |object|
+        @api_instance.list({limit: 10000}).to_hash[:results].each do |object|
           object[:ensure] = 'present'
           parsed_objects << object
         end
