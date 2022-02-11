@@ -50,6 +50,7 @@ class pulpcore_api (
   Optional[Hash]              $rpm_rpm_trees,
   Hash                        $rpm_rpm_tree_defaults,
   Variant[Boolean,Array]      $purge_resources,
+  Boolean                     $autopublish_new_repositories,
 ) {
   if $manage_agent_gems {
     $agent_gems.each |String $agent_gem_name, Hash $options| {
@@ -98,5 +99,24 @@ class pulpcore_api (
     resources { $purge_resources:
       purge => true,
     }
+  }
+
+  if $autopublish_new_repositories {
+    file { '/usr/local/bin/publish_new_rpm_repositories.sh':
+      mode   => '0755',
+      owner  => 'root',
+      group  => 'root',
+      source => 'puppet:///modules/pulpcore_api/rpm/publish_new_repositories.sh',
+    }
+
+    exec { 'autopublish new rpm repositories':
+      command     => '/usr/local/bin/publish_new_rpm_repositories.sh',
+      user        => 'root',
+      refreshonly => true,
+      provider    => 'shell',
+      logoutput   => 'on_failure',
+    }
+
+    Pulpcore_rpm_rpm_distribution <| |> ~> Exec['autopublish new rpm repositories']
   }
 }
