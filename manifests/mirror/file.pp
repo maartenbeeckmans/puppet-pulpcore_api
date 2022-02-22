@@ -24,7 +24,7 @@ define pulpcore_api::mirror::file (
   pulpcore_file_file_repository { "file-mirror-${name}":
     ensure      => $ensure,
     autopublish => true,
-    remote      => Deferred('pulpcore::get_pulp_href_pulpcore_file_file_remote', ["file-mirror-${name}"]),
+    remote      => "file-mirror-${name}",
     *           => $repository_extra_options,
   }
 
@@ -32,23 +32,35 @@ define pulpcore_api::mirror::file (
   pulpcore_file_file_distribution { "file-mirror-${name}":
     ensure     => $ensure,
     base_path  => $base_path,
-    repository => Deferred('pulpcore::get_pulp_href_pulpcore_file_file_repository', ["file-mirror-${name}"]),
+    repository => "file-mirror-${name}",
     *          => $distribution_extra_options,
   }
 
   if $manage_timer {
     systemd::timer { "sync-file-mirror-${name}.timer":
-      timer_content   => epp("${module_name}/mirror/timer.epp", {'name' => "file-mirror-${name}", 'service' => "sync-file-mirror-${name}.service", 'on_calendar' => $timer_on_calendar}),
-      service_content => epp("${module_name}/mirror/service.epp", {'name' => "file-mirror-${name}", 'plugin' => 'file'}),
+      timer_content   => epp("${module_name}/mirror/timer.epp", {
+        'name'        => "file-mirror-${name}",
+        'service'     => "sync-file-mirror-${name}.service",
+        'on_calendar' => $timer_on_calendar
+      }),
+      service_content => epp("${module_name}/mirror/service.epp", {
+        'name'   => "file-mirror-${name}",
+        'plugin' => 'file'
+      }),
     }
 
-    service { "sync-mirror-${name}.timer":
+    service { "sync-file-mirror-${name}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["sync-file-mirror-${name}.timer"],
+      subscribe => [
+        Pulpcore_file_file_remote["file-mirror-${name}"],
+        Pulpcore_file_file_repository["file-mirror-${name}"],
+        Pulpcore_file_file_distribution["file-mirror-${name}"],
+        Systemd::Timer["sync-file-mirror-${name}.timer"]
+      ],
     }
   }
 
-  Pulpcore_file_file_remote["file-mirror-${name}"] 
+  Pulpcore_file_file_remote["file-mirror-${name}"]
   -> Pulpcore_file_file_repository["file-mirror-${name}"]
   -> Pulpcore_file_file_distribution["file-mirror-${name}"]
 }

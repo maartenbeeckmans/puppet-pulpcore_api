@@ -26,3 +26,6 @@
 .envrc
 /inventory.yaml
 /spec/fixtures/litmus_inventory.yaml
+.pdk/cache/
+.cache/
+.config/puppet/analytics.yml

@@ -24,6 +24,11 @@ group :development do
   gem "puppet-module-posix-dev-r#{minor_version}", '~> 1.0',     require: false, platforms: [:ruby]
   gem "puppet-module-win-default-r#{minor_version}", '~> 1.0',   require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "puppet-module-win-dev-r#{minor_version}", '~> 1.0',       require: false, platforms: [:mswin, :mingw, :x64_mingw]
+  gem "pulpcore_client", "= 3.15.0",                             require: true
+  gem "pulp_container_client", "= 2.8.0",                        require: true
+  gem "pulp_deb_client", "= 2.15.0",                             require: true
+  gem "pulp_file_client", "= 1.9.0",                             require: true
+  gem "pulp_rpm_client", "= 3.15.0",                             require: true
 end
 group :system_tests do
   gem "puppet-module-posix-system-r#{minor_version}", '~> 1.0', require: false, platforms: [:ruby]

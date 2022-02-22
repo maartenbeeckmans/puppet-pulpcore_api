@@ -10,8 +10,8 @@ define pulpcore_api::tree::rpm::step (
   Boolean          $first_target            = false,
   Optional[String] $upstream                = undef,
   Integer          $retain_package_versions = 0,
-  String           $environment             = $title,
-  String           $concat_target           = "/usr/local/bin/promote-rpm-${project}-${environment}",
+  String           $environment             = regsubst($title, "${project}-", ''),
+  String           $concat_target           = "/usr/local/bin/promote-rpm-tree-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
   Boolean          $manage_timer            = true,
   String           $timer_on_calendar       = 'daily',
@@ -20,7 +20,7 @@ define pulpcore_api::tree::rpm::step (
     pulpcore_api::tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
       upstream                => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
-        default => "${project}-${upstream}-${releasever}-${basearch}-${key}",
+        default => "rpm-tree-${project}-${upstream}-${releasever}-${basearch}-${key}",
       },
       sync_with_upstream      => $value['sync_with_upstream'] ? { #lint:ignore:selector_inside_resource
         true    => true,
@@ -50,28 +50,28 @@ define pulpcore_api::tree::rpm::step (
 
   | EOT
 
-  concat::fragment { "rpm-${project}-${environment}-header":
+  concat::fragment { "rpm-tree-${project}-${environment}-header":
     target  => $concat_target,
     content => inline_epp($_copy_template),
     order   => '01',
   }
 
   if $manage_timer {
-    systemd::timer { "promote-rpm-${project}-${environment}.timer":
+    systemd::timer { "promote-rpm-tree-${project}-${environment}.timer":
       timer_content   => epp("${module_name}/tree/timer.epp", {
-        'name'        => "promote-rpm-${project}-${environment}",
-        'service'     => "promote-rpm-${project}-${environment}.service",
+        'name'        => "promote-rpm-tree-${project}-${environment}",
+        'service'     => "promote-rpm-tree-${project}-${environment}.service",
         'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/tree/service.epp", {
-        'name'        => "rpm ${project} ${environment}",
+        'name'        => "rpm tree ${project} ${environment}",
         'script_path' => $concat_target,
       }),
     }
 
-    service { "promote-rpm-${project}-${environment}.timer":
+    service { "promote-rpm-tree-${project}-${environment}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["promote-rpm-${project}-${environment}.timer"],
+      subscribe => Systemd::Timer["promote-rpm-tree-${project}-${environment}.timer"],
     }
   }
 }

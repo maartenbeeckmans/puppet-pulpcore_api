@@ -1,4 +1,4 @@
-# 
+#
 # This type is automatically generated
 #
 # frozen_string_literal: true
@@ -10,7 +10,7 @@ Puppet::ResourceApi.register_type(
   docs: <<-EOS,
 @summary <%= config_hash['description'] %>
 
-This type provides Puppet with the capabilities to manage a pulp <%= @name %>
+This type provides Puppet with the capabilities to manage a pulp <%= config_hash['name'] %>
 EOS
   features: [],
   attributes: {
@@ -19,10 +19,16 @@ EOS
       desc:    'Whether this resource should be present or absent on the target system.',
       default: 'present',
     },
-    <% config_hash['attributes'].each { |attribute| %>
+    <%- config_hash['attributes'].each { |attribute| -%>
     <%= attribute['name'] -%>: {
       type:      '<%= attribute['type'] %>',
+      <%- if attribute['description'].length >= 180 -%>
+      # rubocop:disable Layout/LineLength
+      <%- end -%>
       desc:      '<%= attribute['description'] %>',
+      <%- if attribute['description'].length >= 180 -%>
+      # rubocop:enable Layout/LineLength
+      <%- end -%>
       <%- if not attribute['default'].nil? -%>
         <%- if attribute['type'] == 'Boolean' or attribute['type'] == 'Integer' or attribute['type'] == 'Hash' or attribute['type'] == 'Array' or attribute['type'] == 'Optional[Array]' -%>
       default:   <%= attribute['default'] %>,
@@ -34,6 +40,6 @@ EOS
       behaviour: <%= attribute['behaviour'] %>,
       <%- end -%>
     },
-    <% } %>
+    <%- } -%>
   },
 )

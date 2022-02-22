@@ -8,8 +8,10 @@ pulpcore_api::cli_users:
   root: {}
 pulpcore_api::netrc_users:
   root: {}
-pulpcore_api::cli_package: ~
-pulpcore_api::cli_package_ensure: installed
+pulpcore_api::cli_packages:
+  - python38-pulp-cli
+  - python38-pulp-cli-deb
+pulpcore_api::cli_packages_ensure: installed
 pulpcore_api::manage_agent_gems: true
 pulpcore_api::agent_gems:
   pulpcore_client:

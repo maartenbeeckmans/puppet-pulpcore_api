@@ -32,8 +32,8 @@ class pulpcore_api (
   Boolean                     $manage_api_config,
   Hash                        $cli_users,
   Hash                        $netrc_users,
-  Optional[String]            $cli_package,
-  String                      $cli_package_ensure,
+  Array[String]               $cli_packages,
+  String                      $cli_packages_ensure,
   Boolean                     $manage_agent_gems,
   Hash[String,Hash]           $agent_gems,
   Optional[Hash[String,Hash]] $resources,
@@ -102,21 +102,6 @@ class pulpcore_api (
   }
 
   if $autopublish_new_repositories {
-    file { '/usr/local/bin/publish_new_rpm_repositories.sh':
-      mode   => '0755',
-      owner  => 'root',
-      group  => 'root',
-      source => 'puppet:///modules/pulpcore_api/rpm/publish_new_repositories.sh',
-    }
-
-    exec { 'autopublish new rpm repositories':
-      command     => '/usr/local/bin/publish_new_rpm_repositories.sh',
-      user        => 'root',
-      refreshonly => true,
-      provider    => 'shell',
-      logoutput   => 'on_failure',
-    }
-
-    Pulpcore_rpm_rpm_distribution <| |> ~> Exec['autopublish new rpm repositories']
+    contain pulpcore_api::autopublish
   }
 }

@@ -26,25 +26,25 @@
 # @param ssl_verify
 #   Perform an ssl_verify on the pulpcore api configuration
 #
-# @param cli_package
-#   Name of the cli package to install
+# @param cli_packages
+#   Name of the cli packages to install
 #
-# @param cli_package_ensure
-#   Ensure parameter of the cli package resource
+# @param cli_packages_ensure
+#   Ensure parameter of the cli packages resource
 #
 define pulpcore_api::config::cli (
-  String                $localuser          = $title,
-  Optional[String]      $homedir            = undef,
-  String                $pulp_host          = split($::pulpcore_api::pulp_server, '://')[1],
-  String                $pulp_username      = $::pulpcore_api::pulp_username,
-  String                $pulp_password      = $::pulpcore_api::pulp_password,
-  Enum['http', 'https'] $scheme             = split($::pulpcore_api::pulp_server, '://')[0],
-  Boolean               $ssl_verify         = $::pulpcore_api::ssl_verify,
-  Optional[String]      $cli_package        = $::pulpcore_api::cli_package,
-  String                $cli_package_ensure = $::pulpcore_api::cli_package_ensure,
+  String                $localuser           = $title,
+  Optional[String]      $homedir             = undef,
+  String                $pulp_host           = split($::pulpcore_api::pulp_server, '://')[1],
+  String                $pulp_username       = $::pulpcore_api::pulp_username,
+  String                $pulp_password       = $::pulpcore_api::pulp_password,
+  Enum['http', 'https'] $scheme              = split($::pulpcore_api::pulp_server, '://')[0],
+  Boolean               $ssl_verify          = $::pulpcore_api::ssl_verify,
+  Array[String]         $cli_packages        = $::pulpcore_api::cli_packages,
+  String                $cli_packages_ensure = $::pulpcore_api::cli_packages_ensure,
 ) {
-  if $cli_package {
-    ensure_resource('package', $cli_package, { ensure => $cli_package_ensure, })
+  if $cli_packages != [] {
+    ensure_resource('package', $cli_packages, { ensure => $cli_packages_ensure, })
     ensure_resource('file', '/etc/profile.d/pulp.sh', {
       ensure  => file,
       mode    => '0644',

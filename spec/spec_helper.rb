@@ -71,3 +71,14 @@ def ensure_module_defined(module_name)
 end
 
 # 'spec_overrides' from sync.yml will appear below this line
+
+def stub_default_config
+  default_config = {
+    scheme: 'http',
+    host: 'localhost',
+    ssl_verify: true,
+    username: 'admin',
+    password: 'secret',
+  }
+  allow(PuppetX::PulpcoreApi::Config).to receive(:read_config).and_return(default_config)
+end
