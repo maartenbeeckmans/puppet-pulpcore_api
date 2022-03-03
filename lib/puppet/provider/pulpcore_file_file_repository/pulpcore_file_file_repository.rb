@@ -51,7 +51,7 @@ class ::Puppet::Provider::PulpcoreFileFileRepository::PulpcoreFileFileRepository
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:remote].nil?
+          unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'file', 'remote')
           end
           parsed_objects << object
@@ -97,7 +97,7 @@ class ::Puppet::Provider::PulpcoreFileFileRepository::PulpcoreFileFileRepository
   end
 
   def hash_to_object(hash)
-    if not hash[:remote].nil?
+    unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'file', 'remote')
     end
     PulpFileClient::FileFileRepository.new(

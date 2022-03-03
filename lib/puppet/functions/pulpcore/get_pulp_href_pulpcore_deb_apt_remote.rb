@@ -21,7 +21,7 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_pulpcore_deb_apt_rem
   def get_pulp_href_pulpcore_deb_apt_remote(name)
     # Add deprication warning as this function should not be used anymore
     # The resources don't require it and custom scripts should use names instead of href's
-    Puppet.warning("The function :pulpcore::get_pulp_href_pulpcore_deb_apt_remote is depricated and will be removed in a future release.")
+    Puppet.warning('The function :pulpcore::get_pulp_href_pulpcore_deb_apt_remote is deprecated and will be removed in a future release.')
 
     apiconfig = PuppetX::PulpcoreApi::Config.configure
     PulpDebClient.configure do |config|

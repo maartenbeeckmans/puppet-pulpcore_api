@@ -51,10 +51,10 @@ class ::Puppet::Provider::PulpcoreFileFilePublication::PulpcoreFileFilePublicati
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:repository_version].nil?
+          unless object[:repository_version].nil?
             object[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository_version], 'file', 'repository_version')
           end
-          if not object[:repository].nil?
+          unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'file', 'repository')
           end
           parsed_objects << object
@@ -100,10 +100,10 @@ class ::Puppet::Provider::PulpcoreFileFilePublication::PulpcoreFileFilePublicati
   end
 
   def hash_to_object(hash)
-    if not hash[:repository_version].nil?
+    unless hash[:repository_version].nil?
       hash[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository_version], 'file', 'repository_version')
     end
-    if not hash[:repository].nil?
+    unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'file', 'repository')
     end
     PulpFileClient::FileFilePublication.new(

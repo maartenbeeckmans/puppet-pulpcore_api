@@ -51,7 +51,7 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:remote].nil?
+          unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'deb', 'remote')
           end
           parsed_objects << object
@@ -97,7 +97,7 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
   end
 
   def hash_to_object(hash)
-    if not hash[:remote].nil?
+    unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'deb', 'remote')
     end
     PulpDebClient::DebAptRepository.new(

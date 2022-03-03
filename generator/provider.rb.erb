@@ -52,8 +52,8 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
           <%- config_hash['attributes'].each { |attribute| -%>
-          <%- if not attribute['get_pulp_href_function'].nil? -%>
-          if not object[:<%= attribute['name'] -%>].nil?
+          <%- unless attribute['get_pulp_href_function'].nil? -%>
+          unless object[:<%= attribute['name'] -%>].nil?
             object[:<%= attribute['name'] -%>] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:<%= attribute['name'] %>], '<%= attribute['get_pulp_href_function'][:plugin] %>', '<%= attribute['get_pulp_href_function'][:object] %>')
           end
           <%- end -%>
@@ -102,8 +102,8 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
 
   def hash_to_object(hash)
     <%- config_hash['attributes'].each { |attribute| -%>
-    <%- if not attribute['get_pulp_href_function'].nil? -%>
-    if not hash[:<%= attribute['name'] -%>].nil?
+    <%- unless attribute['get_pulp_href_function'].nil? -%>
+    unless hash[:<%= attribute['name'] -%>].nil?
       hash[:<%= attribute['name'] -%>] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:<%= attribute['name'] %>], '<%= attribute['get_pulp_href_function'][:plugin] %>', '<%= attribute['get_pulp_href_function'][:object] %>')
     end
     <%- end -%>

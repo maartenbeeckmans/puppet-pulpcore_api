@@ -51,13 +51,13 @@ class ::Puppet::Provider::PulpcoreDebAptDistribution::PulpcoreDebAptDistribution
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:content_guard].nil?
+          unless object[:content_guard].nil?
             object[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:content_guard], 'deb', 'content_guard')
           end
-          if not object[:repository].nil?
+          unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'deb', 'repository')
           end
-          if not object[:publication].nil?
+          unless object[:publication].nil?
             object[:publication] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:publication], 'deb', 'publication')
           end
           parsed_objects << object
@@ -103,13 +103,13 @@ class ::Puppet::Provider::PulpcoreDebAptDistribution::PulpcoreDebAptDistribution
   end
 
   def hash_to_object(hash)
-    if not hash[:content_guard].nil?
+    unless hash[:content_guard].nil?
       hash[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:content_guard], 'deb', 'content_guard')
     end
-    if not hash[:repository].nil?
+    unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'deb', 'repository')
     end
-    if not hash[:publication].nil?
+    unless hash[:publication].nil?
       hash[:publication] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:publication], 'deb', 'publication')
     end
     PulpDebClient::DebAptDistribution.new(

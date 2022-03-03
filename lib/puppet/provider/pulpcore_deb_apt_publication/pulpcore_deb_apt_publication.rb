@@ -51,13 +51,13 @@ class ::Puppet::Provider::PulpcoreDebAptPublication::PulpcoreDebAptPublication <
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:repository_version].nil?
+          unless object[:repository_version].nil?
             object[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository_version], 'deb', 'repository_version')
           end
-          if not object[:repository].nil?
+          unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'deb', 'repository')
           end
-          if not object[:signing_service].nil?
+          unless object[:signing_service].nil?
             object[:signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:signing_service], 'deb', 'signing_service')
           end
           parsed_objects << object
@@ -103,13 +103,13 @@ class ::Puppet::Provider::PulpcoreDebAptPublication::PulpcoreDebAptPublication <
   end
 
   def hash_to_object(hash)
-    if not hash[:repository_version].nil?
+    unless hash[:repository_version].nil?
       hash[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository_version], 'deb', 'repository_version')
     end
-    if not hash[:repository].nil?
+    unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'deb', 'repository')
     end
-    if not hash[:signing_service].nil?
+    unless hash[:signing_service].nil?
       hash[:signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:signing_service], 'deb', 'signing_service')
     end
     PulpDebClient::DebAptPublication.new(

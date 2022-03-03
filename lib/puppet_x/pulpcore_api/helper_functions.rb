@@ -170,16 +170,11 @@ module PuppetX::PulpcoreApi
 
       begin
         response = api_instance.list({ limit: 1, name: name }).to_hash
-        if response[:count] == 0
-          return nil
-        elsif response[:count] == 1
-          return response[:results][0][:pulp_href]
-        else
-          raise Puppet::ParseError, "Fount not exactly 1 object with #{name}, found #{response[:count]}."
-        end
+        return nil if response[:count] == 0
       rescue PulpRpmClient::ApiError => e
         raise Puppet::ParseError, "Exception when calling #{api_instance}->list: #{e}"
       end
+      response[:results][0][:pulp_href]
     end
 
     def self.get_namevar(pulp_href, plugin, object)
@@ -193,13 +188,8 @@ module PuppetX::PulpcoreApi
 
       begin
         response = get_api_instance(plugin, object).read(pulp_href).to_hash
-        if not response[:name].nil?
-          return response[:name]
-        elsif not response[:repository_version].nil?
-          return response[:repository_version]
-        else
-          raise Puppet::ParseError, "Could not determine namevar for resource with pulp_href #{pulp_href}"
-        end
+        return response[:name] unless response[:name].nil?
+        return response[:repository_version] unless response[:repository_version].nil?
       rescue PulpRpmClient::ApiError => e
         raise Puppet::ParseError, "Exception when calling #{api_instance}->read: #{e}"
       end

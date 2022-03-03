@@ -51,13 +51,13 @@ class ::Puppet::Provider::PulpcoreContainerContainerDistribution::PulpcoreContai
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:repository].nil?
+          unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'container', 'repository')
           end
-          if not object[:content_guard].nil?
+          unless object[:content_guard].nil?
             object[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:content_guard], 'container', 'content_guard')
           end
-          if not object[:repository_version].nil?
+          unless object[:repository_version].nil?
             object[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository_version], 'container', 'repository_version')
           end
           parsed_objects << object
@@ -103,13 +103,13 @@ class ::Puppet::Provider::PulpcoreContainerContainerDistribution::PulpcoreContai
   end
 
   def hash_to_object(hash)
-    if not hash[:repository].nil?
+    unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'container', 'repository')
     end
-    if not hash[:content_guard].nil?
+    unless hash[:content_guard].nil?
       hash[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:content_guard], 'container', 'content_guard')
     end
-    if not hash[:repository_version].nil?
+    unless hash[:repository_version].nil?
       hash[:repository_version] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository_version], 'container', 'repository_version')
     end
     PulpContainerClient::ContainerContainerDistribution.new(

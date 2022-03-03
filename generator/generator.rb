@@ -136,7 +136,7 @@ class Endpoint
       if attribute[1]['format'] == 'date-time'
         attributemap['type'] = 'Runtime'
       end
-      if attribute[1]['type'] == 'string' and attribute[1]['format'] == 'uri' and attribute[1]['readOnly'].nil?
+      if attribute[1]['type'] == 'string' && attribute[1]['format'] == 'uri' && attribute[1]['readOnly'].nil?
         attributemap['get_pulp_href_function'] = {
           plugin: resource['client_binding'].split(%r{/ |\_|\-/})[1],
           object: attribute[0]

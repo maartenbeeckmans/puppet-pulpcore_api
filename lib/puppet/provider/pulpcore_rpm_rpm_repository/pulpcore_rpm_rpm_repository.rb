@@ -51,10 +51,10 @@ class ::Puppet::Provider::PulpcoreRpmRpmRepository::PulpcoreRpmRpmRepository < P
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
-          if not object[:remote].nil?
+          unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'rpm', 'remote')
           end
-          if not object[:metadata_signing_service].nil?
+          unless object[:metadata_signing_service].nil?
             object[:metadata_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:metadata_signing_service], 'rpm', 'metadata_signing_service')
           end
           parsed_objects << object
@@ -100,10 +100,10 @@ class ::Puppet::Provider::PulpcoreRpmRpmRepository::PulpcoreRpmRpmRepository < P
   end
 
   def hash_to_object(hash)
-    if not hash[:remote].nil?
+    unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'rpm', 'remote')
     end
-    if not hash[:metadata_signing_service].nil?
+    unless hash[:metadata_signing_service].nil?
       hash[:metadata_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:metadata_signing_service], 'rpm', 'metadata_signing_service')
     end
     PulpRpmClient::RpmRpmRepository.new(
