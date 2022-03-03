@@ -19,6 +19,10 @@ Puppet::Functions.create_function(:'pulpcore::get_pulp_href_pulpcore_file_file_p
   end
 
   def get_pulp_href_pulpcore_file_file_publication(name)
+    # Add deprication warning as this function should not be used anymore
+    # The resources don't require it and custom scripts should use names instead of href's
+    Puppet.warning("The function :pulpcore::get_pulp_href_pulpcore_file_file_publication is depricated and will be removed in a future release.")
+
     apiconfig = PuppetX::PulpcoreApi::Config.configure
     PulpFileClient.configure do |config|
       config.scheme     = apiconfig[:scheme]
