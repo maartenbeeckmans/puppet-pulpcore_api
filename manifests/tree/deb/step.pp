@@ -10,8 +10,8 @@ define pulpcore_api::tree::deb::step (
   String           $distribution_prefix,
   Boolean          $first_target            = false,
   Optional[String] $upstream                = undef,
-  String           $environment             = $title,
-  String           $concat_target           = "/usr/local/bin/promote-deb-${project}-${environment}",
+  String           $environment             = regsubst($title, "${project}-", ''),
+  String           $concat_target           = "/usr/local/bin/promote-deb-tree-${project}-${environment}",
   String           $pulp_server             = $::pulpcore_api::pulp_server,
   Boolean          $manage_timer            = true,
   String           $timer_on_calendar       = 'daily',
@@ -20,7 +20,7 @@ define pulpcore_api::tree::deb::step (
     pulpcore_api::tree::deb::step::repo { "${project}-${environment}-${key}":
       upstream            => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
-        default => "${project}-${upstream}-${key}",
+        default => "deb-tree-${project}-${upstream}-${key}",
       },
       sync_with_upstream  => $value['sync_with_upstream'] ? { #lint:ignore:selector_inside_resource
         true    => true,
@@ -49,28 +49,28 @@ define pulpcore_api::tree::deb::step (
 
   | EOT
 
-  concat::fragment { "deb-${project}-${environment}-header":
+  concat::fragment { "deb-tree-${project}-${environment}-header":
     target  => $concat_target,
     content => inline_epp($_copy_template),
     order   => '01',
   }
 
   if $manage_timer {
-    systemd::timer { "promote-deb-${project}-${environment}.timer":
+    systemd::timer { "promote-deb-tree-${project}-${environment}.timer":
       timer_content   => epp("${module_name}/tree/timer.epp", {
-        'name'        => "promote-deb-${project}-${environment}",
-        'service'     => "promote-deb-${project}-${environment}.service",
+        'name'        => "promote-deb-tree-${project}-${environment}",
+        'service'     => "promote-deb-tree-${project}-${environment}.service",
         'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/tree/service.epp", {
-        'name'        => "promote-deb-${project}-${environment}",
+        'name'        => "deb tree ${project} ${environment}",
         'script_path' => $concat_target,
       }),
     }
 
-    service { "promote-deb-${project}-${environment}.timer":
+    service { "promote-deb-tree-${project}-${environment}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["promote-deb-${project}-${environment}.timer"],
+      subscribe => Systemd::Timer["promote-deb-tree-${project}-${environment}.timer"],
     }
   }
 }

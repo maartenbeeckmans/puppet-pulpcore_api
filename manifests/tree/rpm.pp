@@ -10,7 +10,7 @@ define pulpcore_api::tree::rpm (
   String $distribution_prefix = 'rpm/private/tree',
 ) {
   create_resources ( 'pulpcore_api::tree::rpm::step',
-    $targets,
+    prefix($targets, "${project}-"),
     {
       repositories        => $repositories,
       project             => $project,

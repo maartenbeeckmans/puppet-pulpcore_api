@@ -32,8 +32,8 @@ class pulpcore_api (
   Boolean                     $manage_api_config,
   Hash                        $cli_users,
   Hash                        $netrc_users,
-  Optional[String]            $cli_package,
-  String                      $cli_package_ensure,
+  Array[String]               $cli_packages,
+  String                      $cli_packages_ensure,
   Boolean                     $manage_agent_gems,
   Hash[String,Hash]           $agent_gems,
   Optional[Hash[String,Hash]] $resources,
@@ -50,6 +50,7 @@ class pulpcore_api (
   Optional[Hash]              $rpm_rpm_trees,
   Hash                        $rpm_rpm_tree_defaults,
   Variant[Boolean,Array]      $purge_resources,
+  Boolean                     $autopublish_new_repositories,
 ) {
   if $manage_agent_gems {
     $agent_gems.each |String $agent_gem_name, Hash $options| {
@@ -98,5 +99,9 @@ class pulpcore_api (
     resources { $purge_resources:
       purge => true,
     }
+  }
+
+  if $autopublish_new_repositories {
+    contain pulpcore_api::autopublish
   }
 }

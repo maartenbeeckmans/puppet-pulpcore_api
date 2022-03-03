@@ -11,7 +11,7 @@ define pulpcore_api::tree::deb (
   String $distribution_prefix = 'deb/private/tree',
 ) {
   create_resources ( 'pulpcore_api::tree::deb::step',
-    $targets,
+    prefix($targets, "${project}-"),
     {
       repositories        => $repositories,
       project             => $project,

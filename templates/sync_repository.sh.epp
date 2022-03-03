@@ -4,27 +4,25 @@
 # File managed by Pupppet, all changes will be overwritten
 #
 # Wrapper script used for syncing repositories as the cli is not supporting it
+# Script is still dependend on the cli for getting information the cli supports
 #
 set -e
 
 pulp_server=<%= $pulp_server %>
-src_repository_href=${1}
-dst_repository_href=${2}
-dst_distribution_href=${3}
+
+plugin=${1}
+src_repository_name=${2}
+dst_repository_name=${3}
+dst_distribution_name=${4}
 
 #
 # Script prober
 #
 
 # Getting some vars
-src_repository_name=$(curl --insecure --netrc --silent --request GET --header "Content-Type: application/json" "${pulp_server}${src_repository_href}" | jq '.name')
-dst_repository_name=$(curl --insecure --netrc --silent --request GET --header "Content-Type: application/json" "${pulp_server}${dst_repository_href}" | jq '.name')
-dst_distribution_base_path=$(curl --insecure --netrc --silent --request GET --header "Content-Type: application/json" "${pulp_server}${dst_distribution_href}" | jq '.base_path')
 
-# Getting latest repository version href
-echo "Getting latest repository version href of ${src_repository_name}"
-src_repository_latest_version_href=$(curl --insecure --netrc --silent --request GET --header "Content-Type: application/json" "${pulp_server}${src_repository_href}" | jq '.latest_version_href')
-echo "Latest repository version href: ${src_repository_latest_version_href}"
+dst_repository_href=$(pulp ${plugin} repository show --name ${dst_repository_name} | jq '.pulp_href' | xargs)
+src_repository_latest_version_href=$(pulp ${plugin} repository show --name ${src_repository_name} | jq '.latest_version_href' | xargs)
 
 # Performing a sync task with the src repository and the dst repository
 echo "Syncing ${src_repository_name} with ${dst_repository_name}"
@@ -33,8 +31,4 @@ task_href=$(curl --insecure --netrc --silent --request POST --header "Content-Ty
 /bin/pulp task show --wait --href ${task_href//'"'/''}
 
 # Makin sure the repository is added to the distribution
-# Will perform a patch to the distribution object
-echo "Publishing repository on ${dst_distribution_base_path}"
-task_href=$(curl --insecure --netrc --silent --request PATCH --header "Content-Type: application/json" "${pulp_server}${dst_distribution_href}" -d "{\"repository\":\"${dst_repository_href}\"}" | jq '.task')
-
-/bin/pulp task show --wait --href ${task_href//'"'/''}
+pulp rpm distribution update --name $dst_distribution_name --repository $dst_repository_name

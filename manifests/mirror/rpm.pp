@@ -14,7 +14,7 @@ define pulpcore_api::mirror::rpm (
   Hash                  $distribution_extra_options = {},
 ) {
   # Create remote
-  pulpcore_rpm_rpm_remote { "mirror-${name}":
+  pulpcore_rpm_rpm_remote { "rpm-mirror-${name}":
     ensure => $ensure,
     url    => $url,
     policy => $policy,
@@ -22,38 +22,43 @@ define pulpcore_api::mirror::rpm (
   }
 
   # Create repository
-  pulpcore_rpm_rpm_repository { "mirror-${name}":
+  pulpcore_rpm_rpm_repository { "rpm-mirror-${name}":
     ensure      => $ensure,
     autopublish => true,
-    remote      => Deferred('pulpcore::get_pulp_href_pulpcore_rpm_rpm_remote', ["mirror-${name}"]),
+    remote      => "rpm-mirror-${name}",
     *           => $repository_extra_options,
   }
 
   # Create distribution
-  pulpcore_rpm_rpm_distribution { "mirror-${name}":
+  pulpcore_rpm_rpm_distribution { "rpm-mirror-${name}":
     ensure     => $ensure,
     base_path  => $base_path,
-    repository => Deferred('pulpcore::get_pulp_href_pulpcore_rpm_rpm_repository', ["mirror-${name}"]),
+    repository => "rpm-mirror-${name}",
     *          => $distribution_extra_options,
   }
 
   if $manage_timer {
-    systemd::timer { "sync-mirror-${name}.timer":
+    systemd::timer { "sync-rpm-mirror-${name}.timer":
       timer_content   => epp("${module_name}/mirror/timer.epp", {
-        'name'        => "mirror-${name}",
-        'service'     => "sync-mirror-${name}.service",
+        'name'        => "rpm-mirror-${name}",
+        'service'     => "sync-rpm-mirror-${name}.service",
         'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/mirror/service.epp", {
-        'name'   => "mirror-${name}",
+        'name'   => "rpm-mirror-${name}",
         'plugin' => 'rpm',
         'mirror' => $mirror,
       }),
     }
 
-    service { "sync-mirror-${name}.timer":
+    service { "sync-rpm-mirror-${name}.timer":
       ensure    => running,
-      subscribe => Systemd::Timer["sync-mirror-${name}.timer"],
+      subscribe => [
+        Pulpcore_rpm_rpm_remote["rpm-mirror-${name}"],
+        Pulpcore_rpm_rpm_repository["rpm-mirror-${name}"],
+        Pulpcore_rpm_rpm_distribution["rpm-mirror-${name}"],
+        Systemd::Timer["sync-rpm-mirror-${name}.timer"]
+      ],
     }
   }
 }

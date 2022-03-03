@@ -10,40 +10,35 @@ define pulpcore_api::tree::deb::step::repo (
   Optional[String] $upstream,
   Boolean          $sync_with_upstream      = true,
 ) {
-  ensure_resource ( 'pulpcore_deb_apt_repository',
-    $title,
-    {
-      description             => $title,
-    }
-  )
+  pulpcore_deb_apt_repository { "deb-tree-${title}":
+    description => $title,
+  }
 
-  ensure_resource ( 'pulpcore_deb_apt_distribution',
-    $title,
-    {
-      base_path  => "${distribution_prefix}/${split($title, '-')[-1]}",
-      repository => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
-    }
-  )
+  pulpcore_deb_apt_distribution { "deb-tree-${title}":
+    base_path  => "${distribution_prefix}/${split($title, '-')[-1]}",
+    repository => "deb-tree-${title}",
+  }
 
   if $upstream and $sync_with_upstream {
     $_copy_template = @(EOT)
-    <%- | $src_repository_href, $dst_repository_href, $dst_distribution_href | -%>
-    /usr/local/bin/sync_repository.sh <%= $src_repository_href %> <%= $dst_repository_href %> <%= $dst_distribution_href %>
+    <%- | $plugin, $src_repository_name, $dst_repository_name, $dst_distribution_name | -%>
+    /usr/local/bin/sync_repository.sh <%= $plugin %> <%= $src_repository_name %> <%= $dst_repository_name %> <%= $dst_distribution_name %>
 
     | EOT
 
     $_copy_config = {
-      'src_repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$upstream]),
-      'dst_repository_href'   => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_repository', [$title]),
-      'dst_distribution_href' => Deferred('pulpcore::get_pulp_href_pulpcore_deb_apt_distribution', [$title]),
+      'plugin'                => 'deb',
+      'src_repository_name'   => $upstream,
+      'dst_repository_name'   => "deb-tree-${title}",
+      'dst_distribution_name' => "deb-tree-${title}",
     }
 
-    concat::fragment { "deb-${title}-upstream":
+    concat::fragment { "deb-tree-${title}-upstream":
       target  => $concat_target,
-      content => Deferred('inline_epp', [$_copy_template, $_copy_config]),
+      content => inline_epp($_copy_template, $_copy_config),
       order   => '10',
     }
   }
 
-  Pulpcore_deb_apt_repository[$title] -> Pulpcore_deb_apt_distribution[$title]
+  Pulpcore_deb_apt_repository["deb-tree-${title}"] -> Pulpcore_deb_apt_distribution["deb-tree-${title}"]
 }
