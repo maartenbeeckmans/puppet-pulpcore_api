@@ -61,7 +61,7 @@ define pulpcore_api::mirror::container (
         Pulpcore_container_container_repository["container-mirror-${name}"],
         Pulpcore_contentguards_container_content_redirect["container-mirror-${name}"],
         Pulpcore_container_container_distribution["container-mirror-${name}"],
-        Systemd::Timer["sync-container-mirror-${name}.timer"
+        Systemd::Timer["sync-container-mirror-${name}.timer"]
       ],
     }
   }
