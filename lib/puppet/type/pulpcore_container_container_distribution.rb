@@ -38,7 +38,7 @@ EOS
       desc:      'The base (relative) path component of the published url. Avoid paths that overlap with other distribution base paths (e.g. "foo" and "foo/bar")',
     },
     content_guard: {
-      type:      'String',
+      type:      'Optional[String]',
       desc:      'An optional content-guard. If none is specified, a default one will be used.',
     },
     repository_version: {
