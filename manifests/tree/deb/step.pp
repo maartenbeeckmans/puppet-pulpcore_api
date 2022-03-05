@@ -29,6 +29,12 @@ define pulpcore_api::tree::deb::step (
       },
       distribution_prefix => "${distribution_prefix}/${project}/${environment}",
       concat_target       => $concat_target,
+      pulp_labels         => {
+        'type'        => 'tree',
+        'project'     => $project,
+        'environment' => $environment,
+        'repository'  => $key,
+      },
     }
   }
 

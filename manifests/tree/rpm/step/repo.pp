@@ -6,17 +6,20 @@ define pulpcore_api::tree::rpm::step::repo (
   Integer          $retain_package_versions,
   String           $concat_target,
   Optional[String] $upstream,
+  Hash             $pulp_labels,
   Boolean          $sync_with_upstream      = true,
 ) {
   pulpcore_rpm_rpm_repository { "rpm-tree-${title}":
     description             => $title,
     autopublish             => true,
     retain_package_versions => $retain_package_versions,
+    pulp_labels             => $pulp_labels,
   }
 
   pulpcore_rpm_rpm_distribution { "rpm-tree-${title}":
-    base_path  => "${distribution_prefix}/${split($title, '-')[-1]}",
-    repository => "rpm-tree-${title}",
+    base_path   => "${distribution_prefix}/${split($title, '-')[-1]}",
+    repository  => "rpm-tree-${title}",
+    pulp_labels => $pulp_labels,
   }
 
   if $upstream and $sync_with_upstream {

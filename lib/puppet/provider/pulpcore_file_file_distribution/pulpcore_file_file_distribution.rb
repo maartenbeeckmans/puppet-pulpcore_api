@@ -54,6 +54,8 @@ class ::Puppet::Provider::PulpcoreFileFileDistribution::PulpcoreFileFileDistribu
           unless object[:content_guard].nil?
             object[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:content_guard], 'file', 'content_guard')
           end
+          # Convert keys of pulp_labels from symbols to keys
+          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
           unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'file', 'repository')
           end
@@ -106,6 +108,8 @@ class ::Puppet::Provider::PulpcoreFileFileDistribution::PulpcoreFileFileDistribu
     unless hash[:content_guard].nil?
       hash[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:content_guard], 'file', 'content_guard')
     end
+    # Convert keys of pulp_labels to symbols
+    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
     unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'file', 'repository')
     end

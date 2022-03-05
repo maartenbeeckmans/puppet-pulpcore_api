@@ -51,6 +51,8 @@ class ::Puppet::Provider::PulpcoreRpmRpmRemote::PulpcoreRpmRpmRemote < Puppet::R
       begin
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
+          # Convert keys of pulp_labels from symbols to keys
+          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
           parsed_objects << object
         end
       rescue PulpRpmClient::ApiError => e
@@ -94,6 +96,8 @@ class ::Puppet::Provider::PulpcoreRpmRpmRemote::PulpcoreRpmRpmRemote < Puppet::R
   end
 
   def hash_to_object(hash)
+    # Convert keys of pulp_labels to symbols
+    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
     PulpRpmClient::RpmRpmRemote.new(
       hash.tap { |value| value.delete(:ensure) },
     )

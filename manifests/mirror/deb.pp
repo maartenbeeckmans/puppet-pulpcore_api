@@ -18,6 +18,8 @@ define pulpcore_api::mirror::deb (
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
+  Hash                  $pulp_labels                = {},
+  Hash                  $pulp_labels_defaults       = { 'type' => 'mirror' },
 ) {
 
   # Create remote
@@ -31,22 +33,25 @@ define pulpcore_api::mirror::deb (
     sync_sources   => $sync_sources,
     sync_udebs     => $sync_udebs,
     sync_installer => $sync_installer,
+    pulp_labels    => merge($pulp_labels_defaults, $pulp_labels),
     *              => $remote_extra_options,
   }
 
   # Create repository
   pulpcore_deb_apt_repository { "deb-mirror-${name}":
-    ensure => $ensure,
-    remote => "deb-mirror-${name}",
-    *      => $repository_extra_options,
+    ensure      => $ensure,
+    remote      => "deb-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $repository_extra_options,
   }
 
   # Create distribution
   pulpcore_deb_apt_distribution { "deb-mirror-${name}":
-    ensure     => $ensure,
-    base_path  => $base_path,
-    repository => "deb-mirror-${name}",
-    *          => $distribution_extra_options,
+    ensure      => $ensure,
+    base_path   => $base_path,
+    repository  => "deb-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $distribution_extra_options,
   }
 
   if $manage_timer {

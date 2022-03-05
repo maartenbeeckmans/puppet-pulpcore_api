@@ -14,6 +14,8 @@ define pulpcore_api::mirror::container (
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
+  Hash                  $pulp_labels                = {},
+  Hash                  $pulp_labels_defaults       = {'type' => 'mirror' },
 ) {
   # Create remote
   pulpcore_container_container_remote { "container-mirror-${name}":
@@ -21,24 +23,27 @@ define pulpcore_api::mirror::container (
     url           => $url,
     policy        => $policy,
     upstream_name => $upstream_name,
+    pulp_labels   => merge($pulp_labels_defaults, $pulp_labels),
     *             => $remote_extra_options,
   }
 
   # Create repository
   pulpcore_container_container_repository { "container-mirror-${name}":
-    ensure => $ensure,
-    remote => "container-mirror-${name}",
-    *      => $repository_extra_options,
+    ensure      => $ensure,
+    remote      => "container-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $repository_extra_options,
   }
 
   pulpcore_contentguards_container_content_redirect { "container-mirror-${name}": }
 
   # Create distribution
   pulpcore_container_container_distribution { "container-mirror-${name}":
-    ensure     => $ensure,
-    base_path  => $base_path,
-    repository => "container-mirror-${name}",
-    *          => $distribution_extra_options,
+    ensure      => $ensure,
+    base_path   => $base_path,
+    repository  => "container-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $distribution_extra_options,
   }
 
   if $manage_timer {

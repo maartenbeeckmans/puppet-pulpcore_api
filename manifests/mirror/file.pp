@@ -11,13 +11,16 @@ define pulpcore_api::mirror::file (
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
+  Hash                  $pulp_labels                = {},
+  Hash                  $pulp_labels_defaults       = { 'type' => 'mirror' },
 ) {
   # Create remote
   pulpcore_file_file_remote { "file-mirror-${name}":
-    ensure => $ensure,
-    url    => $url,
-    policy => $policy,
-    *      => $remote_extra_options,
+    ensure      => $ensure,
+    url         => $url,
+    policy      => $policy,
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $remote_extra_options,
   }
 
   # Create repository
@@ -25,15 +28,17 @@ define pulpcore_api::mirror::file (
     ensure      => $ensure,
     autopublish => true,
     remote      => "file-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
     *           => $repository_extra_options,
   }
 
   # Create distribution
   pulpcore_file_file_distribution { "file-mirror-${name}":
-    ensure     => $ensure,
-    base_path  => $base_path,
-    repository => "file-mirror-${name}",
-    *          => $distribution_extra_options,
+    ensure      => $ensure,
+    base_path   => $base_path,
+    repository  => "file-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $distribution_extra_options,
   }
 
   if $manage_timer {

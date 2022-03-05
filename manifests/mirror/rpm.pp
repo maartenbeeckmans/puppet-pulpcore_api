@@ -12,13 +12,16 @@ define pulpcore_api::mirror::rpm (
   Hash                  $remote_extra_options       = {},
   Hash                  $repository_extra_options   = {},
   Hash                  $distribution_extra_options = {},
+  Hash                  $pulp_labels                = {},
+  Hash                  $pulp_labels_defaults       = { 'type' => 'mirror' },
 ) {
   # Create remote
   pulpcore_rpm_rpm_remote { "rpm-mirror-${name}":
-    ensure => $ensure,
-    url    => $url,
-    policy => $policy,
-    *      => $remote_extra_options,
+    ensure      => $ensure,
+    url         => $url,
+    policy      => $policy,
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $remote_extra_options,
   }
 
   # Create repository
@@ -26,15 +29,17 @@ define pulpcore_api::mirror::rpm (
     ensure      => $ensure,
     autopublish => true,
     remote      => "rpm-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
     *           => $repository_extra_options,
   }
 
   # Create distribution
   pulpcore_rpm_rpm_distribution { "rpm-mirror-${name}":
-    ensure     => $ensure,
-    base_path  => $base_path,
-    repository => "rpm-mirror-${name}",
-    *          => $distribution_extra_options,
+    ensure      => $ensure,
+    base_path   => $base_path,
+    repository  => "rpm-mirror-${name}",
+    pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
+    *           => $distribution_extra_options,
   }
 
   if $manage_timer {
