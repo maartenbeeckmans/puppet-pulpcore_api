@@ -52,7 +52,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRepository::PulpcoreContaine
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
           # Convert keys of pulp_labels from symbols to keys
-          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
+          object[:pulp_labels] = object[:pulp_labels].collect { |k, v| [k.to_s, v] }.to_h
           unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'container', 'remote')
           end
@@ -100,7 +100,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRepository::PulpcoreContaine
 
   def hash_to_object(hash)
     # Convert keys of pulp_labels to symbols
-    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
+    hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
     unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'container', 'remote')
     end

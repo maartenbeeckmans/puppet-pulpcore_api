@@ -52,7 +52,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
         @api_instance.list({ limit: 10_000 }).to_hash[:results].each do |object|
           object[:ensure] = 'present'
           # Convert keys of pulp_labels from symbols to keys
-          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
+          object[:pulp_labels] = object[:pulp_labels].collect { |k, v| [k.to_s, v] }.to_h
           parsed_objects << object
         end
       rescue PulpContainerClient::ApiError => e
@@ -97,7 +97,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
 
   def hash_to_object(hash)
     # Convert keys of pulp_labels to symbols
-    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
+    hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
     PulpContainerClient::ContainerContainerRemote.new(
       hash.tap { |value| value.delete(:ensure) },
     )

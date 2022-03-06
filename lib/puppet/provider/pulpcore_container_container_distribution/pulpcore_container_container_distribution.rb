@@ -55,7 +55,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerDistribution::PulpcoreContai
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'container', 'repository')
           end
           # Convert keys of pulp_labels from symbols to keys
-          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
+          object[:pulp_labels] = object[:pulp_labels].collect { |k, v| [k.to_s, v] }.to_h
           unless object[:content_guard].nil?
             object[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:content_guard], 'container', 'content_guard')
           end
@@ -109,7 +109,7 @@ class ::Puppet::Provider::PulpcoreContainerContainerDistribution::PulpcoreContai
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'container', 'repository')
     end
     # Convert keys of pulp_labels to symbols
-    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
+    hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
     unless hash[:content_guard].nil?
       hash[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:content_guard], 'container', 'content_guard')
     end

@@ -55,7 +55,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmDistribution::PulpcoreRpmRpmDistribution
             object[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:content_guard], 'rpm', 'content_guard')
           end
           # Convert keys of pulp_labels from symbols to keys
-          object[:pulp_labels] = object[:pulp_labels].collect{|k,v| [k.to_s, v]}.to_h
+          object[:pulp_labels] = object[:pulp_labels].collect { |k, v| [k.to_s, v] }.to_h
           unless object[:repository].nil?
             object[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:repository], 'rpm', 'repository')
           end
@@ -109,7 +109,7 @@ class ::Puppet::Provider::PulpcoreRpmRpmDistribution::PulpcoreRpmRpmDistribution
       hash[:content_guard] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:content_guard], 'rpm', 'content_guard')
     end
     # Convert keys of pulp_labels to symbols
-    hash[:pulp_labels] = hash[:pulp_labels].collect{|k,v| [k.to_sym, v]}.to_h
+    hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
     unless hash[:repository].nil?
       hash[:repository] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:repository], 'rpm', 'repository')
     end

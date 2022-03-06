@@ -54,7 +54,7 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
           <%- config_hash['attributes'].each { |attribute| -%>
           <%- if attribute['type'] == 'Hash' -%>
           # Convert keys of <%= attribute['name'] -%> from symbols to keys
-          object[:<%= attribute['name'] -%>] = object[:<%= attribute['name'] -%>].collect{|k,v| [k.to_s, v]}.to_h
+          object[:<%= attribute['name'] -%>] = object[:<%= attribute['name'] -%>].collect { |k, v| [k.to_s, v] }.to_h
           <%- end -%>
           <%- unless attribute['get_pulp_href_function'].nil? -%>
           unless object[:<%= attribute['name'] -%>].nil?
@@ -108,7 +108,7 @@ class ::Puppet::Provider::<%= config_hash['providername'] -%>::<%= config_hash['
     <%- config_hash['attributes'].each { |attribute| -%>
     <%- if attribute['type'] == 'Hash' -%>
     # Convert keys of <%= attribute['name'] -%> to symbols
-    hash[:<%= attribute['name'] -%>] = hash[:<%= attribute['name'] -%>].collect{|k,v| [k.to_sym, v]}.to_h
+    hash[:<%= attribute['name'] -%>] = hash[:<%= attribute['name'] -%>].collect { |k, v| [k.to_sym, v] }.to_h
     <%- end -%>
     <%- unless attribute['get_pulp_href_function'].nil? -%>
     unless hash[:<%= attribute['name'] -%>].nil?

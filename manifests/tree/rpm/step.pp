@@ -30,7 +30,7 @@ define pulpcore_api::tree::rpm::step (
       distribution_prefix     => "${distribution_prefix}/${project}/${environment}/${releasever}/${basearch}",
       retain_package_versions => $retain_package_versions,
       concat_target           => $concat_target,
-      pulp_labels         => {
+      pulp_labels             => {
         'type'        => 'tree',
         'project'     => $project,
         'environment' => $environment,
