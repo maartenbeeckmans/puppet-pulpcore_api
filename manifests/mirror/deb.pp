@@ -5,6 +5,8 @@ define pulpcore_api::mirror::deb (
   Stdlib::HTTPUrl       $url,
   String                $base_path,
   String                $distributions,
+  String                $name_prefix                = 'deb-mirror-',
+  String                $base_path_prefix           = 'deb/pub/mirrors/',
   Optional[String]      $components                 = undef,
   Optional[String]      $architectures              = undef,
   Boolean               $sync_sources               = false,
@@ -23,7 +25,7 @@ define pulpcore_api::mirror::deb (
 ) {
 
   # Create remote
-  pulpcore_deb_apt_remote { "deb-mirror-${name}":
+  pulpcore_deb_apt_remote { "${name_prefix}${name}":
     ensure         => $ensure,
     url            => $url,
     policy         => $policy,
@@ -38,48 +40,48 @@ define pulpcore_api::mirror::deb (
   }
 
   # Create repository
-  pulpcore_deb_apt_repository { "deb-mirror-${name}":
+  pulpcore_deb_apt_repository { "${name_prefix}${name}":
     ensure      => $ensure,
-    remote      => "deb-mirror-${name}",
+    remote      => "${name_prefix}${name}",
     pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
     *           => $repository_extra_options,
   }
 
   # Create distribution
-  pulpcore_deb_apt_distribution { "deb-mirror-${name}":
+  pulpcore_deb_apt_distribution { "${name_prefix}${name}":
     ensure      => $ensure,
-    base_path   => $base_path,
-    repository  => "deb-mirror-${name}",
+    base_path   => "${base_path_prefix}${base_path}",
+    repository  => "${name_prefix}${name}",
     pulp_labels => merge($pulp_labels_defaults, $pulp_labels),
     *           => $distribution_extra_options,
   }
 
   if $manage_timer {
-    systemd::timer { "sync-deb-mirror-${name}.timer":
+    systemd::timer { "sync-${name_prefix}${name}.timer":
       timer_content   => epp("${module_name}/mirror/timer.epp", {
-        'name'        => "deb-mirror-${name}",
-        'service'     => "sync-deb-mirror-${name}.service",
+        'name'        => "${name_prefix}${name}",
+        'service'     => "sync-${name_prefix}${name}.service",
         'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/mirror/service.epp", {
-        'name'   => "deb-mirror-${name}",
+        'name'   => "${name_prefix}${name}",
         'plugin' => 'deb',
         'mirror' => $mirror,
       }),
     }
 
-    service { "sync-deb-mirror-${name}.timer":
+    service { "sync-${name_prefix}${name}.timer":
       ensure    => running,
       subscribe => [
-        Pulpcore_deb_apt_remote["deb-mirror-${name}"],
-        Pulpcore_deb_apt_repository["deb-mirror-${name}"],
-        Pulpcore_deb_apt_distribution["deb-mirror-${name}"],
-        Systemd::Timer["sync-deb-mirror-${name}.timer"]
+        Pulpcore_deb_apt_remote["${name_prefix}${name}"],
+        Pulpcore_deb_apt_repository["${name_prefix}${name}"],
+        Pulpcore_deb_apt_distribution["${name_prefix}${name}"],
+        Systemd::Timer["sync-${name_prefix}${name}.timer"]
       ],
     }
   }
 
-  Pulpcore_deb_apt_remote["deb-mirror-${name}"]
-  -> Pulpcore_deb_apt_repository["deb-mirror-${name}"]
-  -> Pulpcore_deb_apt_distribution["deb-mirror-${name}"]
+  Pulpcore_deb_apt_remote["${name_prefix}${name}"]
+  -> Pulpcore_deb_apt_repository["${name_prefix}${name}"]
+  -> Pulpcore_deb_apt_distribution["${name_prefix}${name}"]
 }
