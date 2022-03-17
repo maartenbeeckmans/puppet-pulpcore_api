@@ -95,7 +95,7 @@ class pulpcore_api (
   }
 
   contain pulpcore_api::mirror
-  contain pulpcore_api::tree
+  contain pulpcore_api::promotion_tree
 
   if $purge_resources {
     resources { $purge_resources:
