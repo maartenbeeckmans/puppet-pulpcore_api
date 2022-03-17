@@ -1,7 +1,7 @@
 #
 #
 #
-define pulpcore_api::tree::rpm::step (
+define pulpcore_api::promotion_tree::rpm::step (
   Hash             $repositories,
   String           $project,
   String           $releasever,
@@ -17,7 +17,7 @@ define pulpcore_api::tree::rpm::step (
   String           $timer_on_calendar       = 'daily',
 ) {
   $repositories.each |$key, $value| {
-    pulpcore_api::tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
+    pulpcore_api::promotion_tree::rpm::step::repo { "${project}-${environment}-${releasever}-${basearch}-${key}":
       upstream                => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
         default => "rpm-tree-${project}-${upstream}-${releasever}-${basearch}-${key}",

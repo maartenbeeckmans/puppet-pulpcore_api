@@ -2,6 +2,8 @@
 #
 # @example
 #   include pulpcore_api::config
+# @api private
+#
 class pulpcore_api::config (
   Boolean $manage_api_config = $::pulpcore_api::manage_api_config,
   Hash    $cli_users         = $::pulpcore_api::cli_users,

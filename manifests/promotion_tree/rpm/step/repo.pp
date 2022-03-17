@@ -1,7 +1,7 @@
 #
 #
 #
-define pulpcore_api::tree::rpm::step::repo (
+define pulpcore_api::promotion_tree::rpm::step::repo (
   String           $distribution_prefix,
   Integer          $retain_package_versions,
   String           $concat_target,

@@ -4,6 +4,29 @@
 # @example
 #   include ::pulpcore_api
 #
+# @param pulp_server
+#   Server address used for connecting with the pulpcore_api
+#   Example: https://pulp.example.com
+#
+# @param pulp_username
+#   Username used for connecting with the pulpcore api
+#
+# @param pulp_password
+#   Password used for connecting with the pulpcore api
+#
+# @param ssl_verify
+#   Verify the ssl certificate when connecting with the pulpcore api
+#
+# @param manage_api_config
+#   Boolean which determines if the api config used by this module should be managed
+#
+# @param cli_users
+#   Hash containing the users for which the cli should be installed together with the cli config.
+#   Root is required when defined types for mirrors or promotion trees are used within this module.
+#
+# @param netrc_users
+#   Hash containing the users for which the .netrc file should be managed.
+#
 # @param manage_agent_gems
 #   If the agent gems should be managed
 #
@@ -16,41 +39,41 @@
 #
 # @param rpm_rpm_mirror_defaults
 #
-# @param rpm_rpm_trees
+# @param rpm_rpm_promotion_trees
 #
-# @param rpm_rpm_tree_defaults
+# @param rpm_rpm_promotion_tree_defaults
 #
 # @param purge_resources
 #   Array with resources that should be purged
 #   Set to false to not purge any resources
 #
 class pulpcore_api (
-  String                      $pulp_server,
-  String                      $pulp_username,
-  String                      $pulp_password,
-  Boolean                     $ssl_verify,
-  Boolean                     $manage_api_config,
-  Hash                        $cli_users,
-  Hash                        $netrc_users,
-  Array[String]               $cli_packages,
-  String                      $cli_packages_ensure,
-  Boolean                     $manage_agent_gems,
-  Hash[String,Hash]           $agent_gems,
-  Optional[Hash[String,Hash]] $resources,
-  Optional[Hash]              $container_container_mirrors,
-  Hash                        $container_container_mirror_defaults,
-  Optional[Hash]              $deb_apt_mirrors,
-  Hash                        $deb_apt_mirror_defaults,
-  Optional[Hash]              $file_file_mirrors,
-  Hash                        $file_file_mirror_defaults,
-  Optional[Hash]              $rpm_rpm_mirrors,
-  Hash                        $rpm_rpm_mirror_defaults,
-  Optional[Hash]              $deb_apt_trees,
-  Hash                        $deb_apt_tree_defaults,
-  Optional[Hash]              $rpm_rpm_trees,
-  Hash                        $rpm_rpm_tree_defaults,
-  Variant[Boolean,Array]      $purge_resources,
-  Boolean                     $autopublish_new_repositories,
+  Variant[Stdlib::HTTPSUrl, Stdlib::HTTPSUrl] $pulp_server,
+  String                                      $pulp_username,
+  String                                      $pulp_password,
+  Boolean                                     $ssl_verify,
+  Boolean                                     $manage_api_config,
+  Hash                                        $cli_users,
+  Hash                                        $netrc_users,
+  Array[String]                               $cli_packages,
+  String                                      $cli_packages_ensure,
+  Boolean                                     $manage_agent_gems,
+  Hash[String,Hash]                           $agent_gems,
+  Optional[Hash[String,Hash]]                 $resources,
+  Optional[Hash]                              $container_container_mirrors,
+  Hash                                        $container_container_mirror_defaults,
+  Optional[Hash]                              $deb_apt_mirrors,
+  Hash                                        $deb_apt_mirror_defaults,
+  Optional[Hash]                              $file_file_mirrors,
+  Hash                                        $file_file_mirror_defaults,
+  Optional[Hash]                              $rpm_rpm_mirrors,
+  Hash                                        $rpm_rpm_mirror_defaults,
+  Optional[Hash]                              $deb_apt_promotion_trees,
+  Hash                                        $deb_apt_promotion_tree_defaults,
+  Optional[Hash]                              $rpm_rpm_promotion_trees,
+  Hash                                        $rpm_rpm_promotion_tree_defaults,
+  Variant[Boolean,Array]                      $purge_resources,
+  Boolean                                     $autopublish_new_repositories,
 ) {
   if $manage_agent_gems {
     $agent_gems.each |String $agent_gem_name, Hash $options| {
@@ -71,29 +94,8 @@ class pulpcore_api (
     }
   }
 
-  if $container_container_mirrors {
-    create_resources(pulpcore_api::mirror::container, $container_container_mirrors, $container_container_mirror_defaults)
-  }
-
-  if $deb_apt_mirrors {
-    create_resources(pulpcore_api::mirror::deb, $deb_apt_mirrors, $deb_apt_mirror_defaults)
-  }
-
-  if $file_file_mirrors {
-    create_resources(pulpcore_api::mirror::file, $file_file_mirrors, $file_file_mirror_defaults)
-  }
-
-  if $rpm_rpm_mirrors {
-    create_resources(pulpcore_api::mirror::rpm, $rpm_rpm_mirrors, $rpm_rpm_mirror_defaults)
-  }
-
-  if $deb_apt_trees {
-    create_resources(pulpcore_api::tree::deb, $deb_apt_trees, $deb_apt_tree_defaults)
-  }
-
-  if $rpm_rpm_trees {
-    create_resources(pulpcore_api::tree::rpm, $rpm_rpm_trees, $rpm_rpm_tree_defaults)
-  }
+  contain pulpcore_api::mirror
+  contain pulpcore_api::tree
 
   if $purge_resources {
     resources { $purge_resources:

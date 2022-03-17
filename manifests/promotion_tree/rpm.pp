@@ -1,20 +1,21 @@
-# @summary A short summary of the purpose of this defined type.
 #
-# A description of what this defined type does
 #
-# @example
-#   pulpcore_api::tree::deb { 'namevar': }
-define pulpcore_api::tree::deb (
+#
+define pulpcore_api::promotion_tree::rpm (
   Hash   $targets,
   Hash   $repositories,
+  String $releasever          = '8',
+  String $basearch            = 'x86_64',
   String $project             = $title,
-  String $distribution_prefix = 'deb/private/tree',
+  String $distribution_prefix = 'rpm/private/tree',
 ) {
-  create_resources ( 'pulpcore_api::tree::deb::step',
+  create_resources ( 'pulpcore_api::promotion_tree::rpm::step',
     prefix($targets, "${project}-"),
     {
       repositories        => $repositories,
       project             => $project,
+      releasever          => $releasever,
+      basearch            => $basearch,
       distribution_prefix => $distribution_prefix,
     }
   )

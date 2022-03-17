@@ -3,8 +3,8 @@
 # A description of what this defined type does
 #
 # @example
-#   pulpcore_api::tree::deb::step { 'namevar': }
-define pulpcore_api::tree::deb::step (
+#   pulpcore_api::promotion_tree::deb::step { 'namevar': }
+define pulpcore_api::promotion_tree::deb::step (
   Hash             $repositories,
   String           $project,
   String           $distribution_prefix,
@@ -17,7 +17,7 @@ define pulpcore_api::tree::deb::step (
   String           $timer_on_calendar       = 'daily',
 ) {
   $repositories.each |$key, $value| {
-    pulpcore_api::tree::deb::step::repo { "${project}-${environment}-${key}":
+    pulpcore_api::promotion_tree::deb::step::repo { "${project}-${environment}-${key}":
       upstream            => $first_target ? { #lint:ignore:selector_inside_resource
         true    => $value['upstream'],
         default => "deb-tree-${project}-${upstream}-${key}",

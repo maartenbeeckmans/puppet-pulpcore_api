@@ -3,8 +3,8 @@
 # A description of what this defined type does
 #
 # @example
-#   pulpcore_api::tree::deb::step::repo { 'namevar': }
-define pulpcore_api::tree::deb::step::repo (
+#   pulpcore_api::promotion_tree::deb::step::repo { 'namevar': }
+define pulpcore_api::promotion_tree::deb::step::repo (
   String           $distribution_prefix,
   String           $concat_target,
   Optional[String] $upstream,
