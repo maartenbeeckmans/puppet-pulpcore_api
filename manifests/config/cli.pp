@@ -34,7 +34,6 @@
 #
 define pulpcore_api::config::cli (
   String                $localuser           = $title,
-  Optional[String]      $homedir             = undef,
   String                $pulp_host           = split($::pulpcore_api::pulp_server, '://')[1],
   String                $pulp_username       = $::pulpcore_api::pulp_username,
   String                $pulp_password       = $::pulpcore_api::pulp_password,
@@ -43,7 +42,7 @@ define pulpcore_api::config::cli (
   Array[String]         $cli_packages        = $::pulpcore_api::cli_packages,
   String                $cli_packages_ensure = $::pulpcore_api::cli_packages_ensure,
 ) {
-  if $cli_packages != [] {
+  unless $cli_packages == [] {
     ensure_resource('package', $cli_packages, { ensure => $cli_packages_ensure, })
     ensure_resource('file', '/etc/profile.d/pulp.sh', {
       ensure  => file,
@@ -52,36 +51,12 @@ define pulpcore_api::config::cli (
     })
   }
 
-  if $homedir {
-    $_homedir = $homedir
-  } else {
-    $_homedir = $localuser ? {
-      'root'  => '/root',
-      default => "/home/${localuser}",
-    }
-  }
-
-  exec{ "mkdir-${localuser}-config-pulp":
-    command => "/bin/mkdir -p ${_homedir}/.config/pulp",
-    creates => "${_homedir}/.config/pulp",
-  }
-
-  $cli_config = @("CLI_CONFIG")
-    # This file is managed by puppet - DO NOT EDIT
-    [cli]
-    base_url = "${scheme}://${pulp_host}"
-    username = "${pulp_username}"
-    password = "${pulp_password}"
-    verify_ssl = ${ssl_verify}
-    format = "json"
-    dry_run = false
-    timeout = 0
-    | CLI_CONFIG
-
-  file{ "${_homedir}/.config/pulp/cli.toml":
-    ensure  => file,
-    content => $cli_config,
-    mode    => '0640',
-    require => Exec["mkdir-${localuser}-config-pulp"],
-  }
+  ensure_resource('pulpcore_api::config::cli::instance', "${localuser}_${pulp_host}", {
+    scheme        => $scheme,
+    pulp_host     => $pulp_host,
+    pulp_username => $pulp_username,
+    pulp_password => $pulp_password,
+    ssl_verify    => $ssl_verify,
+    localuser     => $localuser,
+  })
 }

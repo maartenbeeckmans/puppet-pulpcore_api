@@ -22,31 +22,14 @@
 #
 define pulpcore_api::config::netrc (
   String           $localuser          = $title,
-  Optional[String] $homedir            = undef,
   String           $pulp_host          = split($::pulpcore_api::pulp_server, '://')[1],
   String           $pulp_username      = $::pulpcore_api::pulp_username,
   String           $pulp_password      = $::pulpcore_api::pulp_password,
 ) {
-
-  if $homedir {
-    $_homedir = $homedir
-  } else {
-    $_homedir = $localuser ? {
-      'root'  => '/root',
-      default => "/home/${localuser}",
-    }
-  }
-
-  $netrc = @("NETRC")
-    # This file is managed by puppet - DO NOT EDIT
-    machine ${pulp_host}
-    login ${pulp_username}
-    password ${pulp_password}
-    | NETRC
-
-  file{ "${_homedir}/.netrc":
-    ensure  => file,
-    content => $netrc,
-    mode    => '0640',
-  }
+  ensure_resource('pulpcore_api::config::netrc::instance', "${localuser}_${pulp_host}", {
+    localuser     => $localuser,
+    pulp_host     => $pulp_host,
+    pulp_username => $pulp_username,
+    pulp_password => $pulp_password,
+  })
 }
