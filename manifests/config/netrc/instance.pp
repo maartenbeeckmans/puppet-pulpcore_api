@@ -28,7 +28,7 @@ define pulpcore_api::config::netrc::instance (
     password ${pulp_password}
     | NETRC
 
-  concat::fragment { $title:
+  concat::fragment { "pulp-netrc-${title}":
     content => $netrc,
     target  => "${_homedir}/.netrc",
   }

@@ -51,7 +51,7 @@ define pulpcore_api::config::cli::instance (
     timeout = ${timeout}
     | CLI_CONFIG
 
-  concat::fragment { $title:
+  concat::fragment { "pulp-cli-${title}":
     content => $_cli_config,
     target  => "${_homedir}/.config/pulp/cli.toml",
   }
