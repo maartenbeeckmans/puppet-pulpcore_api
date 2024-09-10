@@ -56,6 +56,11 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
           unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'deb', 'remote')
           end
+          unless object[:signing_service].nil?
+            object[:signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:signing_service], 'deb', 'signing_service')
+          end
+          # Convert keys of signing_service_release_overrides from symbols to keys
+          object[:signing_service_release_overrides] = object[:signing_service_release_overrides].collect { |k, v| [k.to_s, v] }.to_h
           parsed_objects << object
         end
       rescue PulpDebClient::ApiError => e
@@ -104,6 +109,11 @@ class ::Puppet::Provider::PulpcoreDebAptRepository::PulpcoreDebAptRepository < P
     unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'deb', 'remote')
     end
+    unless hash[:signing_service].nil?
+      hash[:signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:signing_service], 'deb', 'signing_service')
+    end
+    # Convert keys of signing_service_release_overrides to symbols
+    hash[:signing_service_release_overrides] = hash[:signing_service_release_overrides].collect { |k, v| [k.to_sym, v] }.to_h
     PulpDebClient::DebAptRepository.new(
       hash.tap { |value| value.delete(:ensure) },
     )

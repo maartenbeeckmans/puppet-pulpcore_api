@@ -61,7 +61,7 @@ EOS
     policy: {
       type:      'Enum[immediate,on_demand,streamed]',
       # rubocop:disable Layout/LineLength
-      desc:      ' immediate - All manifests and blobs are downloaded and saved during a sync. on_demand - Only tags and manifests are downloaded. Blobs are not downloaded until they are requested for the first time by a client. streamed - Blobs are streamed to the client with every request and never saved. ',
+      desc:      ' immediate - All manifests and blobs are downloaded and saved during a sync. on_demand - Only tags and manifests are downloaded. Blobs are not downloaded until they are requested for the first time by a client. streamed - Blobs are streamed to the client with every request and never saved. * `immediate` - When syncing, download all metadata and content now. * `on_demand` - When syncing, download metadata, but do not download content now. Instead, download content as clients request it, and save it in Pulp to be served for future client requests. * `streamed` - When syncing, download metadata, but do not download content now. Instead,download content as clients request it, but never save it in Pulp. This causes future requests for that same content to have to be downloaded again.',
       # rubocop:enable Layout/LineLength
       default:   'immediate',
     },
@@ -88,7 +88,7 @@ EOS
     },
     rate_limit: {
       type:      'Optional[Integer]',
-      desc:      'Limits total download rate in requests per second',
+      desc:      'Limits requests per second for each concurrent downloader',
     },
     upstream_name: {
       type:      'String',
@@ -104,6 +104,10 @@ EOS
       desc:      ' A list of tags to exclude during sync. Wildcards *, ? are recognized. `exclude_tags` is evaluated after `include_tags`. ',
       default:   [],
     },
+    sigstore: {
+      type:      'String',
+      desc:      'A URL to a sigstore to download image signatures from',
+    },
     pulp_href: {
       type:      'String',
       desc:      'pulp_href',
@@ -117,6 +121,12 @@ EOS
     pulp_last_updated: {
       type:      'Runtime',
       desc:      'Timestamp of the most recent update of the remote.',
+      behaviour: :read_only,
+    },
+    hidden_fields: {
+      type:      'Array',
+      desc:      'List of hidden (write only) fields',
+      default:   [],
       behaviour: :read_only,
     },
   },

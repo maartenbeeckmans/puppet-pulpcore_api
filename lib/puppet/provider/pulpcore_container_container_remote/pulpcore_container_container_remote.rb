@@ -53,6 +53,9 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
           object[:ensure] = 'present'
           # Convert keys of pulp_labels from symbols to keys
           object[:pulp_labels] = object[:pulp_labels].collect { |k, v| [k.to_s, v] }.to_h
+          unless object[:sigstore].nil?
+            object[:sigstore] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:sigstore], 'container', 'sigstore')
+          end
           parsed_objects << object
         end
       rescue PulpContainerClient::ApiError => e
@@ -98,6 +101,9 @@ class ::Puppet::Provider::PulpcoreContainerContainerRemote::PulpcoreContainerCon
   def hash_to_object(hash)
     # Convert keys of pulp_labels to symbols
     hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
+    unless hash[:sigstore].nil?
+      hash[:sigstore] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:sigstore], 'container', 'sigstore')
+    end
     PulpContainerClient::ContainerContainerRemote.new(
       hash.tap { |value| value.delete(:ensure) },
     )

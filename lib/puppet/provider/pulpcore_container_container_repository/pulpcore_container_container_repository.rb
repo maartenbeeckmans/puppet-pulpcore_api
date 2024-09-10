@@ -56,6 +56,9 @@ class ::Puppet::Provider::PulpcoreContainerContainerRepository::PulpcoreContaine
           unless object[:remote].nil?
             object[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:remote], 'container', 'remote')
           end
+          unless object[:manifest_signing_service].nil?
+            object[:manifest_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:manifest_signing_service], 'container', 'manifest_signing_service')
+          end
           parsed_objects << object
         end
       rescue PulpContainerClient::ApiError => e
@@ -103,6 +106,9 @@ class ::Puppet::Provider::PulpcoreContainerContainerRepository::PulpcoreContaine
     hash[:pulp_labels] = hash[:pulp_labels].collect { |k, v| [k.to_sym, v] }.to_h
     unless hash[:remote].nil?
       hash[:remote] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:remote], 'container', 'remote')
+    end
+    unless hash[:manifest_signing_service].nil?
+      hash[:manifest_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:manifest_signing_service], 'container', 'manifest_signing_service')
     end
     PulpContainerClient::ContainerContainerRepository.new(
       hash.tap { |value| value.delete(:ensure) },

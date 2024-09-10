@@ -59,6 +59,8 @@ class ::Puppet::Provider::PulpcoreRpmRpmRepository::PulpcoreRpmRpmRepository < P
           unless object[:metadata_signing_service].nil?
             object[:metadata_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_namevar(object[:metadata_signing_service], 'rpm', 'metadata_signing_service')
           end
+          # Convert keys of repo_config from symbols to keys
+          object[:repo_config] = object[:repo_config].collect { |k, v| [k.to_s, v] }.to_h
           parsed_objects << object
         end
       rescue PulpRpmClient::ApiError => e
@@ -110,6 +112,8 @@ class ::Puppet::Provider::PulpcoreRpmRpmRepository::PulpcoreRpmRpmRepository < P
     unless hash[:metadata_signing_service].nil?
       hash[:metadata_signing_service] = PuppetX::PulpcoreApi::HelperFunctions.get_pulp_href(hash[:metadata_signing_service], 'rpm', 'metadata_signing_service')
     end
+    # Convert keys of repo_config to symbols
+    hash[:repo_config] = hash[:repo_config].collect { |k, v| [k.to_sym, v] }.to_h
     PulpRpmClient::RpmRpmRepository.new(
       hash.tap { |value| value.delete(:ensure) },
     )

@@ -36,11 +36,16 @@ EOS
     structured: {
       type:      'Boolean',
       desc:      'Activate structured publishing mode.',
-      default:   false,
+      default:   true,
     },
     signing_service: {
       type:      'String',
       desc:      'Sign Release files with this signing key',
+    },
+    publish_upstream_release_fields: {
+      type:      'Boolean',
+      desc:      'publish_upstream_release_fields',
+      default:   false,
     },
     pulp_href: {
       type:      'String',
@@ -50,6 +55,13 @@ EOS
     pulp_created: {
       type:      'Runtime',
       desc:      'Timestamp of creation.',
+      behaviour: :read_only,
+    },
+    pulp_last_updated: {
+      type:      'Runtime',
+      # rubocop:disable Layout/LineLength
+      desc:      'Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.',
+      # rubocop:enable Layout/LineLength
       behaviour: :read_only,
     },
   },

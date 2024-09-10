@@ -26,6 +26,16 @@ The generator uses a few files to work:
 
 ## Changes
 
+### 2024-09-10
+
+Update api.json to 3.49.19, this version works with the following plugins:
+ - **core**: 3.49.19
+ - **container**: 2.20.3
+ - **deb**: 3.2.1
+ - **rpm**: 3.26.1
+ - **file**: 3.49.19
+These plugins are the latest found in the pulpcore RPM repository from The Foreman.
+
 ### 2021-08-25
 
 The current version of the api.json works with the following plugins:
