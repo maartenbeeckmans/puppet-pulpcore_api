@@ -32,6 +32,11 @@ EOS
       type:      'Optional[String]',
       desc:      'An optional content-guard.',
     },
+    hidden: {
+      type:      'Boolean',
+      desc:      'Whether this distribution should be shown in the content app.',
+      default:   false,
+    },
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
@@ -45,6 +50,11 @@ EOS
       type:      'Optional[String]',
       desc:      'Publication to be served',
     },
+    generate_repo_config: {
+      type:      'Boolean',
+      desc:      'An option specifying whether Pulp should generate *.repo files.',
+      default:   false,
+    },
     pulp_href: {
       type:      'String',
       desc:      'pulp_href',
@@ -53,6 +63,13 @@ EOS
     pulp_created: {
       type:      'Runtime',
       desc:      'Timestamp of creation.',
+      behaviour: :read_only,
+    },
+    pulp_last_updated: {
+      type:      'Runtime',
+      # rubocop:disable Layout/LineLength
+      desc:      'Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.',
+      # rubocop:enable Layout/LineLength
       behaviour: :read_only,
     },
     base_url: {

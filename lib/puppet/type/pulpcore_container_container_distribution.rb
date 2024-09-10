@@ -24,21 +24,26 @@ EOS
       desc:      'A unique name. Ex, `rawhide` and `stable`.',
       behaviour: :namevar,
     },
-    repository: {
-      type:      'Optional[String]',
-      desc:      'The latest RepositoryVersion for this Repository will be served.',
-    },
     pulp_labels: {
       type:      'Hash',
       desc:      'pulp_labels',
       default:   {},
+    },
+    hidden: {
+      type:      'Boolean',
+      desc:      'Whether this distribution should be shown in the content app.',
+      default:   false,
+    },
+    repository: {
+      type:      'Optional[String]',
+      desc:      'The latest RepositoryVersion for this Repository will be served.',
     },
     base_path: {
       type:      'String',
       desc:      'The base (relative) path component of the published url. Avoid paths that overlap with other distribution base paths (e.g. "foo" and "foo/bar")',
     },
     content_guard: {
-      type:      'Optional[String]',
+      type:      'String',
       desc:      'An optional content-guard. If none is specified, a default one will be used.',
     },
     repository_version: {
@@ -54,19 +59,31 @@ EOS
       type:      'Optional[String]',
       desc:      'An optional description.',
     },
-    pulp_href: {
-      type:      'String',
-      desc:      'pulp_href',
-      behaviour: :read_only,
-    },
     pulp_created: {
       type:      'Runtime',
       desc:      'Timestamp of creation.',
       behaviour: :read_only,
     },
+    pulp_last_updated: {
+      type:      'Runtime',
+      # rubocop:disable Layout/LineLength
+      desc:      'Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.',
+      # rubocop:enable Layout/LineLength
+      behaviour: :read_only,
+    },
+    pulp_href: {
+      type:      'String',
+      desc:      'pulp_href',
+      behaviour: :read_only,
+    },
     registry_path: {
       type:      'String',
-      desc:      'The Registry hostame/name/ to use with docker pull command defined by this distribution.',
+      desc:      'The Registry hostname/name/ to use with docker pull command defined by this distribution.',
+      behaviour: :read_only,
+    },
+    remote: {
+      type:      'String',
+      desc:      'Remote that can be used to fetch content when using pull-through caching.',
       behaviour: :read_only,
     },
     namespace: {

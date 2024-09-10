@@ -33,13 +33,17 @@ EOS
       type:      'Optional[String]',
       desc:      'An optional description.',
     },
-    retained_versions: {
+    retain_repo_versions: {
       type:      'Optional[Integer]',
-      desc:      'Retain X versions of the repository. Default is null which retains all versions. This is provided as a tech preview in Pulp 3 and may change in the future.',
+      desc:      'Retain X versions of the repository. Default is null which retains all versions.',
     },
     remote: {
       type:      'Optional[String]',
-      desc:      'remote',
+      desc:      'An optional remote to use by default when syncing.',
+    },
+    manifest_signing_service: {
+      type:      'Optional[String]',
+      desc:      'A reference to an associated signing service.',
     },
     pulp_href: {
       type:      'String',
@@ -49,6 +53,13 @@ EOS
     pulp_created: {
       type:      'Runtime',
       desc:      'Timestamp of creation.',
+      behaviour: :read_only,
+    },
+    pulp_last_updated: {
+      type:      'Runtime',
+      # rubocop:disable Layout/LineLength
+      desc:      'Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.',
+      # rubocop:enable Layout/LineLength
       behaviour: :read_only,
     },
     versions_href: {

@@ -29,7 +29,7 @@ EOS
       desc:      'A URI of the repository to be published.',
     },
     manifest: {
-      type:      'String',
+      type:      'Optional[String]',
       desc:      'Filename to use for manifest file containing metadata for all the files.',
       default:   'PULP_MANIFEST',
     },
@@ -41,6 +41,13 @@ EOS
     pulp_created: {
       type:      'Runtime',
       desc:      'Timestamp of creation.',
+      behaviour: :read_only,
+    },
+    pulp_last_updated: {
+      type:      'Runtime',
+      # rubocop:disable Layout/LineLength
+      desc:      'Timestamp of the last time this resource was updated. Note: for immutable resources - like content, repository versions, and publication - pulp_created and pulp_last_updated dates will be the same.',
+      # rubocop:enable Layout/LineLength
       behaviour: :read_only,
     },
     distributions: {

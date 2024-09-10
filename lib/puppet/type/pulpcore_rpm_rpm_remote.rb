@@ -60,7 +60,9 @@ EOS
     },
     policy: {
       type:      'Enum[immediate,on_demand,streamed]',
-      desc:      'The policy to use when downloading content. The possible values include: `immediate`, `on_demand`, and `streamed`. `immediate` is the default.',
+      # rubocop:disable Layout/LineLength
+      desc:      'The policy to use when downloading content. The possible values include: `immediate`, `on_demand`, and `streamed`. `immediate` is the default. * `immediate` - When syncing, download all metadata and content now. * `on_demand` - When syncing, download metadata, but do not download content now. Instead, download content as clients request it, and save it in Pulp to be served for future client requests. * `streamed` - When syncing, download metadata, but do not download content now. Instead,download content as clients request it, but never save it in Pulp. This causes future requests for that same content to have to be downloaded again.',
+      # rubocop:enable Layout/LineLength
       default:   'immediate',
     },
     total_timeout: {
@@ -86,7 +88,7 @@ EOS
     },
     rate_limit: {
       type:      'Optional[Integer]',
-      desc:      'Limits total download rate in requests per second',
+      desc:      'Limits requests per second for each concurrent downloader',
     },
     sles_auth_token: {
       type:      'Optional[String]',
@@ -105,6 +107,12 @@ EOS
     pulp_last_updated: {
       type:      'Runtime',
       desc:      'Timestamp of the most recent update of the remote.',
+      behaviour: :read_only,
+    },
+    hidden_fields: {
+      type:      'Array',
+      desc:      'List of hidden (write only) fields',
+      default:   [],
       behaviour: :read_only,
     },
   },
