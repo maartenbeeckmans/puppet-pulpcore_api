@@ -1,6 +1,7 @@
 <%- | String $name,
       String $plugin,
       Boolean $mirror = false,
+      Optional[String] $sync_policy = undef,
 | -%>
 # File managed by puppet (pulpcore_api)
 # Manual changes will be overwritten
@@ -11,4 +12,4 @@ RefuseManualStop=yes
 
 [Service]
 Type=oneshot
-ExecStart=/bin/pulp <%= $plugin %> repository sync --name <%= $name %> --remote <%= $name %> <%- if $mirror { %> --mirror <%- } -%>
+ExecStart=/bin/pulp <%= $plugin %> repository sync --name <%= $name %> --remote <%= $name %> <%- if $mirror { %> --mirror <%- } -%> <%- if $sync_policy { %> --sync-policy <%= $sync_policy %> <%- } -%>
