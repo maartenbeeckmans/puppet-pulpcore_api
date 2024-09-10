@@ -10,7 +10,7 @@ define pulpcore_api::mirror::rpm (
   String                        $policy                     = 'immediate',
   Boolean                       $manage_timer               = true,
   String                        $timer_on_calendar          = 'daily',
-  Boolean                       $mirror                     = true,
+  Boolean                       $mirror                     = false,
   Pulpcore_api::Rpm_sync_policy $sync_policy                = 'additive',
   Hash                          $remote_extra_options       = {},
   Hash                          $repository_extra_options   = {},
