@@ -2,20 +2,21 @@
 #
 #
 define pulpcore_api::mirror::rpm (
-  Stdlib::HTTPUrl       $url,
-  String                $base_path,
-  String                $name_prefix                = 'rpm-mirror-',
-  String                $base_path_prefix           = 'rpm/pub/mirrors/',
-  Enum[present, absent] $ensure                     = 'present',
-  String                $policy                     = 'immediate',
-  Boolean               $manage_timer               = true,
-  String                $timer_on_calendar          = 'daily',
-  Boolean               $mirror                     = true,
-  Hash                  $remote_extra_options       = {},
-  Hash                  $repository_extra_options   = {},
-  Hash                  $distribution_extra_options = {},
-  Hash                  $pulp_labels                = {},
-  Hash                  $pulp_labels_defaults       = { 'type' => 'mirror' },
+  Stdlib::HTTPUrl               $url,
+  String                        $base_path,
+  String                        $name_prefix                = 'rpm-mirror-',
+  String                        $base_path_prefix           = 'rpm/pub/mirrors/',
+  Enum[present, absent]         $ensure                     = 'present',
+  String                        $policy                     = 'immediate',
+  Boolean                       $manage_timer               = true,
+  String                        $timer_on_calendar          = 'daily',
+  Boolean                       $mirror                     = false,
+  Pulpcore_api::Rpm_sync_policy $sync_policy                = 'additive',
+  Hash                          $remote_extra_options       = {},
+  Hash                          $repository_extra_options   = {},
+  Hash                          $distribution_extra_options = {},
+  Hash                          $pulp_labels                = {},
+  Hash                          $pulp_labels_defaults       = { 'type' => 'mirror' },
 ) {
   # Create remote
   pulpcore_rpm_rpm_remote { "${name_prefix}${name}":
@@ -52,9 +53,10 @@ define pulpcore_api::mirror::rpm (
         'on_calendar' => $timer_on_calendar,
       }),
       service_content => epp("${module_name}/mirror/service.epp", {
-        'name'   => "${name_prefix}${name}",
-        'plugin' => 'rpm',
-        'mirror' => $mirror,
+        'name'        => "${name_prefix}${name}",
+        'plugin'      => 'rpm',
+        'mirror'      => $mirror,
+        'sync_policy' => $sync_policy,
       }),
     }
 
