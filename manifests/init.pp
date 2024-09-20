@@ -36,6 +36,12 @@
 # @param netrc_users
 #   Hash containing the users for which the .netrc file should be managed.
 #
+# @param cli_packages
+#   List of packages for the Pulp CLI to install.
+#
+# @param cli_packages_ensure
+#   `ensure` param to set on the `package` resource for the `$cli_packages`.
+#
 # @param manage_agent_gems
 #   If the agent gems should be managed
 #
@@ -43,10 +49,28 @@
 #   Hash containing agent gems to install with version
 #
 # @param resources
+#   `pulpcore_*` resources to create.
+#   Hash keys are the resource types, with `pulpcore_` automatically prefixed.
+#
+# @param container_container_mirrors
+#
+# @param container_container_mirror_defaults
+#
+# @param deb_apt_mirrors
+#
+# @param deb_apt_mirror_defaults
+#
+# @param file_file_mirrors
+#
+# @param file_file_mirror_defaults
 #
 # @param rpm_rpm_mirrors
 #
 # @param rpm_rpm_mirror_defaults
+#
+# @param deb_apt_promotion_trees
+#
+# @param deb_apt_promotion_tree_defaults
 #
 # @param rpm_rpm_promotion_trees
 #
@@ -55,6 +79,8 @@
 # @param purge_resources
 #   Array with resources that should be purged
 #   Set to false to not purge any resources
+#
+# @param autopublish_new_repositories
 #
 class pulpcore_api (
   Variant[Stdlib::HTTPUrl, Stdlib::HTTPSUrl] $pulp_server,
