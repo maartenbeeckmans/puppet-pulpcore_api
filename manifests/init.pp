@@ -2,7 +2,7 @@
 # @summary This module contains pulpcore api types
 #
 # @example
-#   include ::pulpcore_api
+#   include pulpcore_api
 #
 # @param pulp_server
 #   Server address used for connecting with the pulpcore_api
@@ -16,6 +16,15 @@
 #
 # @param ssl_verify
 #   Verify the ssl certificate when connecting with the pulpcore api
+#
+# @param ssl_ca
+#   Custom ssl CA file to verify ssl certificate when connecting with the pulpcore api
+#
+# @param ssl_client_cert
+#   SSL client certificate file to use to connect to the pulpcore api
+#
+# @param ssl_client_key
+#   SSL client certificate key file to use to connect to the pulpcore api
 #
 # @param manage_api_config
 #   Boolean which determines if the api config used by this module should be managed
@@ -52,6 +61,9 @@ class pulpcore_api (
   String                                     $pulp_username,
   String                                     $pulp_password,
   Boolean                                    $ssl_verify,
+  Optional[Stdlib::UnixPath]                 $ssl_ca,
+  Optional[Stdlib::UnixPath]                 $ssl_client_cert,
+  Optional[Stdlib::UnixPath]                 $ssl_client_key,
   Boolean                                    $manage_api_config,
   Hash                                       $cli_users,
   Hash                                       $netrc_users,
