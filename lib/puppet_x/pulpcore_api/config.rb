@@ -58,7 +58,6 @@ module PuppetX::PulpcoreApi # rubocop:disable Style/ClassAndModuleChildren
         raise Puppet::ParseError, "Config file #{file_path} must contain a value for key '#{CONFIG_PULPCORE_PASSWORD}'"
       end
 
-      Puppet.warning 'insecure connection, sending credentials over http'
       config
     end
   end
