@@ -45,7 +45,7 @@ class pulpcore_api::config::pulpcore_api (
         password        => $pulp_password,
         scheme          => $scheme,
         ssl_verify      => $ssl_verify,
-        ssl_ca          => $ssl_ca,
+        ssl_ca_file     => $ssl_ca,
         ssl_client_cert => $ssl_client_cert,
         ssl_client_key  => $ssl_client_key,
     }),
