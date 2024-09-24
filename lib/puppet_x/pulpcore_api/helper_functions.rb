@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'openssl'
 require 'puppet'
 require 'puppet_x/pulpcore_api/config'
 begin
@@ -28,29 +29,38 @@ rescue LoadError
   Puppet.warning("#{__FILE__}:#{__LINE__}: pulp_rpm_client gem was not found")
 end
 
-module PuppetX::PulpcoreApi
+module PuppetX::PulpcoreApi # rubocop:disable Style/ClassAndModuleChildren
   class HelperFunctions # rubocop:disable Style/Documentation
+    def self.set_client_config(clientconfig, apiconfig)
+      clientconfig.scheme          = apiconfig[:scheme]
+      clientconfig.host            = apiconfig[:host]
+      clientconfig.ssl_verify      = apiconfig[:ssl_verify]
+      unless apiconfig[:ssl_ca_file].nil? || apiconfig[:ssl_ca_file].empty?
+        clientconfig.ssl_ca_file = apiconfig[:ssl_ca_file]
+      end
+      unless apiconfig[:ssl_client_cert].nil? || apiconfig[:ssl_client_cert].empty?
+        clientconfig.ssl_client_cert = OpenSSL::X509::Certificate.new(File.read(apiconfig[:ssl_client_cert]))
+      end
+      unless apiconfig[:ssl_client_key].nil? || apiconfig[:ssl_client_key].empty?
+        clientconfig.ssl_client_key = OpenSSL::PKey::RSA.new(File.read(apiconfig[:ssl_client_key]))
+      end
+      clientconfig.username        = apiconfig[:username]
+      clientconfig.password        = apiconfig[:password]
+    end
+
     def self.get_api_instance(plugin, object)
       apiconfig = PuppetX::PulpcoreApi::Config.configure
 
       case plugin
       when 'container'
         PulpContainerClient.configure do |config|
-          config.scheme     = apiconfig[:scheme]
-          config.host       = apiconfig[:host]
-          config.ssl_verify = apiconfig[:ssl_verify]
-          config.username   = apiconfig[:username]
-          config.password   = apiconfig[:password]
+          set_client_config(config, apiconfig)
         end
 
         case object
         when 'content_guard'
           PulpcoreClient.configure do |config|
-            config.scheme     = apiconfig[:scheme]
-            config.host       = apiconfig[:host]
-            config.ssl_verify = apiconfig[:ssl_verify]
-            config.username   = apiconfig[:username]
-            config.password   = apiconfig[:password]
+            set_client_config(config, apiconfig)
           end
           api_instance = PulpcoreClient::ContentguardsApi.new
         when 'distribution'
@@ -64,21 +74,13 @@ module PuppetX::PulpcoreApi
         end
       when 'deb'
         PulpDebClient.configure do |config|
-          config.scheme     = apiconfig[:scheme]
-          config.host       = apiconfig[:host]
-          config.ssl_verify = apiconfig[:ssl_verify]
-          config.username   = apiconfig[:username]
-          config.password   = apiconfig[:password]
+          set_client_config(config, apiconfig)
         end
 
         case object
         when 'content_guard'
           PulpcoreClient.configure do |config|
-            config.scheme     = apiconfig[:scheme]
-            config.host       = apiconfig[:host]
-            config.ssl_verify = apiconfig[:ssl_verify]
-            config.username   = apiconfig[:username]
-            config.password   = apiconfig[:password]
+            set_client_config(config, apiconfig)
           end
           api_instance = PulpcoreClient::ContentguardsApi.new
         when 'distribution'
@@ -94,21 +96,13 @@ module PuppetX::PulpcoreApi
         end
       when 'file'
         PulpFileClient.configure do |config|
-          config.scheme     = apiconfig[:scheme]
-          config.host       = apiconfig[:host]
-          config.ssl_verify = apiconfig[:ssl_verify]
-          config.username   = apiconfig[:username]
-          config.password   = apiconfig[:password]
+          set_client_config(config, apiconfig)
         end
 
         case object
         when 'content_guard'
           PulpcoreClient.configure do |config|
-            config.scheme     = apiconfig[:scheme]
-            config.host       = apiconfig[:host]
-            config.ssl_verify = apiconfig[:ssl_verify]
-            config.username   = apiconfig[:username]
-            config.password   = apiconfig[:password]
+            set_client_config(config, apiconfig)
           end
           api_instance = PulpcoreClient::ContentguardsApi.new
         when 'distribution'
@@ -124,21 +118,13 @@ module PuppetX::PulpcoreApi
         end
       when 'rpm'
         PulpRpmClient.configure do |config|
-          config.scheme     = apiconfig[:scheme]
-          config.host       = apiconfig[:host]
-          config.ssl_verify = apiconfig[:ssl_verify]
-          config.username   = apiconfig[:username]
-          config.password   = apiconfig[:password]
+          set_client_config(config, apiconfig)
         end
 
         case object
         when 'content_guard'
           PulpcoreClient.configure do |config|
-            config.scheme     = apiconfig[:scheme]
-            config.host       = apiconfig[:host]
-            config.ssl_verify = apiconfig[:ssl_verify]
-            config.username   = apiconfig[:username]
-            config.password   = apiconfig[:password]
+            set_client_config(config, apiconfig)
           end
           api_instance = PulpcoreClient::ContentguardsApi.new
         when 'distribution'

@@ -2,7 +2,7 @@
 # @summary This module contains pulpcore api types
 #
 # @example
-#   include ::pulpcore_api
+#   include pulpcore_api
 #
 # @param pulp_server
 #   Server address used for connecting with the pulpcore_api
@@ -17,6 +17,15 @@
 # @param ssl_verify
 #   Verify the ssl certificate when connecting with the pulpcore api
 #
+# @param ssl_ca
+#   Custom ssl CA file to verify ssl certificate when connecting with the pulpcore api
+#
+# @param ssl_client_cert
+#   SSL client certificate file to use to connect to the pulpcore api
+#
+# @param ssl_client_key
+#   SSL client certificate key file to use to connect to the pulpcore api
+#
 # @param manage_api_config
 #   Boolean which determines if the api config used by this module should be managed
 #
@@ -27,6 +36,12 @@
 # @param netrc_users
 #   Hash containing the users for which the .netrc file should be managed.
 #
+# @param cli_packages
+#   List of packages for the Pulp CLI to install.
+#
+# @param cli_packages_ensure
+#   `ensure` param to set on the `package` resource for the `$cli_packages`.
+#
 # @param manage_agent_gems
 #   If the agent gems should be managed
 #
@@ -34,10 +49,28 @@
 #   Hash containing agent gems to install with version
 #
 # @param resources
+#   `pulpcore_*` resources to create.
+#   Hash keys are the resource types, with `pulpcore_` automatically prefixed.
+#
+# @param container_container_mirrors
+#
+# @param container_container_mirror_defaults
+#
+# @param deb_apt_mirrors
+#
+# @param deb_apt_mirror_defaults
+#
+# @param file_file_mirrors
+#
+# @param file_file_mirror_defaults
 #
 # @param rpm_rpm_mirrors
 #
 # @param rpm_rpm_mirror_defaults
+#
+# @param deb_apt_promotion_trees
+#
+# @param deb_apt_promotion_tree_defaults
 #
 # @param rpm_rpm_promotion_trees
 #
@@ -47,11 +80,16 @@
 #   Array with resources that should be purged
 #   Set to false to not purge any resources
 #
+# @param autopublish_new_repositories
+#
 class pulpcore_api (
   Variant[Stdlib::HTTPUrl, Stdlib::HTTPSUrl] $pulp_server,
   String                                     $pulp_username,
   String                                     $pulp_password,
   Boolean                                    $ssl_verify,
+  Optional[Stdlib::UnixPath]                 $ssl_ca,
+  Optional[Stdlib::UnixPath]                 $ssl_client_cert,
+  Optional[Stdlib::UnixPath]                 $ssl_client_key,
   Boolean                                    $manage_api_config,
   Hash                                       $cli_users,
   Hash                                       $netrc_users,

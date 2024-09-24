@@ -3,7 +3,7 @@
 require 'yaml'
 require 'puppet'
 
-module PuppetX::PulpcoreApi
+module PuppetX::PulpcoreApi # rubocop:disable Style/ClassAndModuleChildren
   class Config # rubocop:disable Style/Documentation
     CONFIG_PULPCORE_SCHEME = :scheme
     CONFIG_PULPCORE_HOST = :host
@@ -58,7 +58,6 @@ module PuppetX::PulpcoreApi
         raise Puppet::ParseError, "Config file #{file_path} must contain a value for key '#{CONFIG_PULPCORE_PASSWORD}'"
       end
 
-      Puppet.warning 'insecure connection, sending credentials over http'
       config
     end
   end

@@ -3,6 +3,7 @@
 #
 # frozen_string_literal: true
 
+require 'openssl'
 require 'puppet'
 require 'puppet/resource_api/simple_provider'
 require 'puppet_x'
@@ -37,6 +38,15 @@ class ::Puppet::Provider::PulpcoreRpmRpmDistribution::PulpcoreRpmRpmDistribution
       config.scheme     = apiconfig[:scheme]
       config.host       = apiconfig[:host]
       config.ssl_verify = apiconfig[:ssl_verify]
+      unless apiconfig[:ssl_ca_file].nil? || apiconfig[:ssl_ca_file].empty?
+        config.ssl_ca_file = apiconfig[:ssl_ca_file]
+      end
+      unless apiconfig[:ssl_client_cert].nil? || apiconfig[:ssl_client_cert].empty?
+        config.ssl_client_cert = OpenSSL::X509::Certificate.new(File.read(apiconfig[:ssl_client_cert]))
+      end
+      unless apiconfig[:ssl_client_key].nil? || apiconfig[:ssl_client_key].empty?
+        config.ssl_client_key = OpenSSL::PKey::RSA.new(File.read(apiconfig[:ssl_client_key]))
+      end
       config.username   = apiconfig[:username]
       config.password   = apiconfig[:password]
     end
